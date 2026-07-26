@@ -30,7 +30,7 @@ class Student:
         self.age = age
         self.year_level = year_level
         self.score = 0
-        self.level = 1   
+        self.level = 1
 #Create a function that adds a point to the overall score when a correct answer is entered
     def add_score(self):
         self.score += 1
@@ -139,6 +139,12 @@ def check_inputs():
                                       "advanced", "basic", "expert",
                                       "Advanced", "Basic", "Expert", ]:
         error_window("Please select a difficulty option.")
+        return
+
+
+#Radio Box Validation
+    if radio_var.get() not in ["5", "10", "15" ]:
+        error_window("Please select the number of questions required.")
         return
 
 
