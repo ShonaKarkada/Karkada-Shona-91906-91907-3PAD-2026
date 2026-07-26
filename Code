@@ -4,9 +4,14 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+from PIL import Image, ImageTk
 import random
 
 main_window = Tk()
+
+logo = PhotoImage(file="img2.png")
+image_resized = logo.subsample(2,2)
+image_label = tk.Label(main_window, image=image_resized)
 
 #Quit subroutine
 def quit_app():
@@ -87,19 +92,17 @@ def start_quiz():
     quiz_window.configure(bg="#dfd5ed")
 
 #Create and format all the labels for the question screen
-    Label(quiz_window, text=f"STUDENT: {current_student.username}",bg="#dfd5ed",font="bold").grid(column = 1, row = 0)
-    Label( quiz_window, text=f"AGE: {current_student.age}", bg="#dfd5ed").grid(column = 3, row = 0)
-    Label(quiz_window, text=f"YEAR LEVEL: {current_student.year_level}", bg="#dfd5ed" ).grid(column =5, row = 0)
-    Label(quiz_window, text=f"DIFFICULTY: {combo_difficulty.get()}", bg="#dfd5ed" ).grid(column = 7, row = 0)
-    Label( quiz_window, text=f"QUESTIONS: {radio_var.get()}", bg="#dfd5ed" ).grid(column = 1, row = 0)
-    Label( quiz_window, text="\nQuestion", font=("Georgia", 12), bg="#dfd5ed" ).grid(column = 7, row = 6)
-    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).grid(column = 7, row = 10)
+    Label(quiz_window, text=f"          STUDENT: {current_student.username}             AGE: {current_student.age}            YEAR LEVEL: {current_student.year_level}            DIFFICULTY: {combo_difficulty.get()}            QUESTIONS: {radio_var.get()}",bg="#dfd5ed").grid(column = 0, row = 0, pady = 8, columnspan = 18)
+
+    Label( quiz_window, text="\nQuestion", font=("Arial", 12), bg="#dfd5ed" ).grid(column = 9, row = 6)
+    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).grid(column = 9, row = 10, pady=50, padx = 25)
 
 #Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
 def check_inputs():
     username = entry_username.get().strip()
     age = entry_age.get().strip()
     year_level = entry_year_level.get().strip()
+
 
 #Username Validation
     if username == "":
@@ -129,6 +132,11 @@ def check_inputs():
         error_window("Year level must be between 1 and 13.")
         return
 
+#Combo Box Validation
+    if combo_difficulty.get() not in ["ADVANCED", "BASIC", "EXPERT"]:
+        error_window("Please select a difficulty option.")
+        return
+
 #Create Student Object
     global current_student
     
@@ -138,63 +146,63 @@ def check_inputs():
 #Create radio buttons to ask the user to specifiy the required number of questions
 radio_var = tk.StringVar(value="5")
 
-#Prompt the user to enter the required details: username, age, and year_level
+#Prompt the user to enter the required details: username, age, and year level
 
 #Create labels for the entry boxes, and for the displayed welcome message
-Label(
-    main_window,
-    text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
+image_label = Label(main_window, image=image_resized, bg="#dfd5ed")
+image_label.grid(row=0, column=0, columnspan=5, pady=10)
 
-Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=0, padx=10, pady=10)
+Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=1, column=0, columnspan=5, pady=15)
 
-Label( main_window, text=" AGE: ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=2, padx=10, sticky = "w")
+Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=0, padx=10, pady=10)
 
-Label( main_window, text="   YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=3, padx=10)
+Label( main_window, text=" AGE: ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=2, padx=10, sticky = "w")
+
+Label( main_window, text="   YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=3, padx=10)
 #Create and format the entry boxes
 entry_username = Entry(main_window, background="#e5dff0", width=18)
-entry_username.grid(row=1, column=1, padx=10)
+entry_username.grid(row=2, column=1, padx=10)
 
 entry_age = Entry(main_window, background="#e5dff0", width=10)
-entry_age.grid(row=1, column=2, padx=10, sticky = "e")
+entry_age.grid(row=2, column=2, padx=10, sticky = "e")
 
 entry_year_level = Entry(main_window, background="#e5dff0", width=16)
-entry_year_level.grid(row=1, column=4, padx=10)
+entry_year_level.grid(row=2, column=4, padx=10)
 
 #Create a combobox that stores the user's difficulty option
 difficulty = ["BASIC", "ADVANCED", "EXPERT"]
 
 difficulty_label = Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="  DIFFICULTY:  " )
-difficulty_label.grid(row=5, column=0, pady=15, columnspan = 2)
+difficulty_label.grid(row=6, column=0, pady=15, columnspan = 2)
 
 combo_difficulty = ttk.Combobox( main_window, values= difficulty, width=15)
-combo_difficulty.grid(row=5, column=3, sticky="w")
+combo_difficulty.grid(row=6, column=3, sticky="w")
 combo_difficulty.current(0)
 
 #Radiobuttons, and label for number of questions entry
 radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO. OF QUESTIONS:  " )
-radio_label.grid(row=3, column=0, pady=15, columnspan=2,)
+radio_label.grid(row=4, column=0, pady=15, columnspan=2,)
 
 #Create the radiobuttons 
 
 radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#dfd5ed", font=("Georgia", 10) )
-radio1.grid(row=3, column=2)
+radio1.grid(row=4, column=2)
 
 radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
-radio2.grid(row=3, column=3)
+radio2.grid(row=4, column=3)
 
 radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#dfd5ed", font=("Georgia", 10) )
-radio3.grid(row=3, column=4)
+radio3.grid(row=4, column=4)
 
 #Create the start, quit and view highscore buttons
 quit_button = Button( main_window, font=("Georgia", 10), text="QUIT", command=quit_app, width=15, background="#e5dff0")
-quit_button.grid(row=7, column=1, padx=5, pady=30 )
+quit_button.grid(row=8, column=1, padx=5, pady=30 )
 
 start_button = Button( main_window, font=("Georgia", 10), text="START", command=check_inputs, width=15, background="#e5dff0")
-start_button.grid(row=7, column=2, padx=5, pady=30)
+start_button.grid(row=8, column=2, padx=5, pady=30)
 
-highscore_button = Button( main_window, font=("Georgia", 10), command=view_highscores, text="  VIEW HIGHSCORES  ",
-    width=19, background="#e5dff0" )
-highscore_button.grid(row=7, column=3, padx=5, pady=30 )
+highscore_button = Button( main_window, font=("Georgia", 10), command=view_highscores, text="  VIEW HIGHSCORES  ",width=19, background="#e5dff0" )
+highscore_button.grid(row=8, column=3, padx=5, pady=30 )
 
 #Create the main window
 main_window.geometry("700x500")
