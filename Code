@@ -17,62 +17,83 @@ radio_var = tk.StringVar(value="5")
 
 #Prompt the user to enter the required details: username, age, and year_level
 #Username entry box
-Label(main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Username" ).grid(column=0, row=1, padx=5, pady=10)
+Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="      Username       " ).grid(column=0, row=1, padx=5, pady=10)
 
 entry_username = Entry(main_window, background="#e5dff0", width=16)
 entry_username.grid(column=1, row=1, padx=5)
 
-#Age entry box
-Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Age" ).grid(column=2, row=1, padx=5)
 
-entry_age = Entry(main_window, background="#e5dff0", width=6)
+
+#Age entry box
+Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="          Age           " ).grid(column=2, row=1, padx=5)
+
+entry_age = Entry(main_window, background="#e5dff0", width=16)
 entry_age.grid(column=3, row=1, padx=5)
 
 #Year Level entry box
-Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Year Level" ).grid(column=4, row=1, padx=5)
+Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="  Year Level  " ).grid(column=4, row=1, padx=5)
 
-entry_year_level = Entry(main_window, background="#e5dff0", width=10)
+entry_year_level = Entry(main_window, background="#e5dff0", width=16)
 entry_year_level.grid(column=5, row=1, padx=5)
 
 #Create a combobox that stores the user's difficulty option
 difficulty = ["Basic", "Advanced", "Expert"]
 
-difficulty_label = Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Difficulty:" )
-difficulty_label.grid(row=3, column=1, pady=15, sticky="w")
+difficulty_label = Label( main_window, font=("Georgia", 10), bg="#cfc1e3",  text="        Difficulty:          " )
+difficulty_label.grid(row=5, column=1, pady=15)
 
 combo_difficulty = ttk.Combobox( main_window, values=difficulty, width=15 )
-combo_difficulty.grid(row=3, column=2, sticky="w")
+combo_difficulty.grid(row=5, column=3, sticky="w")
 combo_difficulty.current(0)
 
 #Radiobuttons, and label for number of questions entry
-radio_label = Label( main_window, font=("Georgia", 10), bg="#dfd5ed", text="No. Of Questions:" )
-radio_label.grid(row=5, column=1, pady=15, sticky="w")
+radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  No. Of Questions:  " )
+radio_label.grid(row=3, column=1, pady=15, sticky="w")
 
 #Incorporate stickey = "w" to align the radio label to the left
 
 radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", bg="#dfd5ed", font=("Georgia", 10) )
-radio1.grid(row=5, column=2)
+radio1.grid(row=3, column=2)
 
 radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
-radio2.grid(row=5, column=3)
+radio2.grid(row=3, column=3)
 
 radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#dfd5ed", font=("Georgia", 10) )
-radio3.grid(row=5, column=4)
+radio3.grid(row=3, column=4)
 
 #Create the start, quit and view highscore buttons
 #Create the Quit button
-quit_button = Button( main_window, text="Quit", command=quit_app, width=12)
+quit_button = Button( main_window, font=("Georgia", 10), text="Quit", command=quit_app, width=15, background="#e5dff0")
 quit_button.grid(row=7, column=1, pady=20)
 
 #Create the Start button
-start_button = Button( main_window, text="Start", width=13)
-start_button.grid(row=7, column=2, pady=20, sticky = "w")
+start_button = Button( main_window, font=("Georgia", 10), text="Start", width=15, background="#e5dff0")
+start_button.grid(row=7, column=2, pady=20)
 #Create the Highscore button
-highscore_button = Button(main_window, text="View Highscores", width=15)
-highscore_button.grid(row=7, column=3, pady=20, sticky = "e")
+highscore_button = Button(main_window, font=("Georgia", 10), text="View Highscores", width=14, background="#e5dff0")
+highscore_button.grid(row=7, column=3, pady=20)
+
+def error_window(message):
+    error_window = tk.Toplevel(window)
+    error_window.title("Error")
+    tk.Label(error_window, text=" ERROR! PLEASE ENTER A VALID INPUT", fg = "red")
+    error_window.geometry("70x50")
+    error_window.configure(bg="#f9f9f9")
+
+def check_inputs():
+    input_check = 0
+    for i in range(4):
+        Label(main_window, text="               ", bg="#dfd5ed").grid(column=2, row=i)
+
+#Check that username is not blank, set error text if blank  
+    name = entry_username.get().strip()
+    if not name.replace(" ", "").isalpha():
+        error_window()
+        input_check = 1
+
 
 #Create the main window
-main_window.geometry("700x500")
+main_window.geometry("745x500")
 main_window.configure(background="#dfd5ed")
 main_window.title("Math Quiz App")
 
