@@ -18,6 +18,8 @@ image_label.grid(row=0, column=0, columnspan=5, pady=15)
 #Quit subroutine
 def quit_app():
     main_window.destroy()
+    with open(HIGHSCORE_FILE, "w") as file:
+        file.write("")
     
 #Highscore text file
 HIGHSCORE_FILE = "Highscores.txt"
@@ -72,7 +74,6 @@ def view_highscores():
             if len(scores) == 0:
 
                 Label( highscore_window, text="No highscores yet", bg="#dfd5ed").pack()
-                Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
 
             else:
 
@@ -90,14 +91,18 @@ def start_quiz():
 #Create the question_screen window, where users will be able to engage/interact with the quiz app
     quiz_window = tk.Toplevel(main_window)
     quiz_window.title("Question Screen")
-    quiz_window.geometry("600x400")
+    quiz_window.geometry("610x400")
     quiz_window.configure(bg="#dfd5ed")
 
-#Create and format all the labels for the question screen
-    Label(quiz_window, text=f"          STUDENT: {current_student.username}             AGE: {current_student.age}            YEAR LEVEL: {current_student.year_level}            DIFFICULTY: {combo_difficulty.get()}            QUESTIONS: {radio_var.get()}",bg="#dfd5ed").grid(column = 0, row = 0, pady = 8, columnspan = 18)
 
-    Label( quiz_window, text="\nQuestion", font=("Arial", 12), bg="#dfd5ed" ).grid(column = 9, row = 6)
-    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).grid(column = 9, row = 10, pady=50, padx = 25)
+    uppercase_username = current_student.username.upper()
+
+
+#Create and format all the labels for the question screen
+    Label(quiz_window, text=f"    STUDENT:  {uppercase_username}         AGE:  {current_student.age}         YEAR LEVEL:  {current_student.year_level}           DIFFICULTY:  {combo_difficulty.get()}          QUESTIONS:  {radio_var.get()}           ",font=("Georgia", 8,) ).grid(column = 1, row = 1, pady = 8, columnspan = 18)
+
+    Label( quiz_window, text="\nQuestion", font=("Georgia", 14), bg="#dfd5ed" ).grid(column = 9, row = 6)
+    Button( quiz_window, text="FINISH",font=("Georgia", 10), width=15, command=lambda: save_highscore(current_student) ).grid(column = 9, row = 10, pady=50, padx = 25)
 
 #Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
 def check_inputs():
@@ -142,12 +147,6 @@ def check_inputs():
         return
 
 
-#Radio Box Validation
-    if radio_var.get() not in ["5", "10", "15" ]:
-        error_window("Please select the number of questions required.")
-        return
-
-
 #Create Student Object
     global current_student
     
@@ -167,7 +166,7 @@ Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).g
 
 Label( main_window, text=" AGE: ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=2, padx=10, sticky = "w")
 
-Label( main_window, text="   YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=3, padx=10)
+Label( main_window, text="  YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=3, padx=10)
 #Create and format the entry boxes
 entry_username = Entry(main_window, background="#e5dff0", width=18)
 entry_username.grid(row=2, column=1, padx=10)
