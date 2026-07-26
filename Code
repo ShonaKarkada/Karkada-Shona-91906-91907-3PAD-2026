@@ -1,5 +1,6 @@
 #Karkada, Shona - 91906 - 3PAD Assessment
 
+#Import tkinter
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
@@ -66,18 +67,19 @@ def view_highscores():
             if len(scores) == 0:
 
                 Label( highscore_window, text="No highscores yet", bg="#dfd5ed").pack()
+                Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
 
             else:
 
                 for score in scores:
 
                     Label( highscore_window, text=score.strip(), bg="#dfd5ed", font=("Georgia", 10)).pack()
+            Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
 
     except FileNotFoundError:
-
         Label( highscore_window, text="No highscores found.", bg="#dfd5ed").pack()
-
-
+        Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
+        
 def start_quiz():
 
 #Create the question_screen window, where users will be able to engage/interact with the quiz app
@@ -87,7 +89,7 @@ def start_quiz():
     quiz_window.configure(bg="#dfd5ed")
 
 #Create and format all the labels for the question screen
-    Label(quiz_window, text=f"Student: {current_student.username}", font=("Georgia", 11, "bold"), bg="#dfd5ed").pack(pady=5)
+    Label(quiz_window, text=f"Student: {current_student.username}",bg="#dfd5ed").pack(pady=5)
     Label( quiz_window, text=f"Age: {current_student.age}", bg="#dfd5ed").pack()
     Label( quiz_window, text=f"Year Level: {current_student.year_level}", bg="#dfd5ed" ).pack()
     Label( quiz_window, text=f"Difficulty: {combo_difficulty.get()}", bg="#dfd5ed" ).pack()
@@ -141,27 +143,29 @@ radio_var = tk.StringVar(value="5")
 #Prompt the user to enter the required details: username, age, and year_level
 
 #Create labels for the entry boxes, and for the displayed welcome message
-Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="      Username       " ).grid(column=0, row=1, padx=5, pady=10)
-Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="          Age           " ).grid(column=2, row=1, padx=5)
-Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="  Year Level  " ).grid(column=4, row=1, padx=5)
+Label(
+    main_window,
+    text="WELCOME TO THE MATHS QUIZ APP!  ENTER YOUR DETAILS BELOW TO BEGIN . . .", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
 
+Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=0, padx=10, pady=10)
+
+Label( main_window, text=" AGE: ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=2, padx=10, sticky = "w")
+
+Label( main_window, text="   YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=3, padx=10)
 #Create and format the entry boxes
-#Username entry box
-entry_username = Entry(main_window, background="#e5dff0", width=16)
-entry_username.grid(column=1, row=1, padx=5)
+entry_username = Entry(main_window, background="#e5dff0", width=18)
+entry_username.grid(row=1, column=1, padx=10)
 
-#Age entry box
-entry_age = Entry(main_window, background="#e5dff0", width=16)
-entry_age.grid(column=3, row=1, padx=5)
+entry_age = Entry(main_window, background="#e5dff0", width=10)
+entry_age.grid(row=1, column=2, padx=10, sticky = "e")
 
-#Year Level entry box
-entry_year_level = Entry(main_window, background="#e5dff0", width=16)
-entry_year_level.grid(column=5, row=1, padx=5)
+entry_year_level = Entry(main_window, background="#e5dff0", width=10)
+entry_year_level.grid(row=1, column=4, padx=10)
 
 #Create a combobox that stores the user's difficulty option
-difficulty = ["Basic", "Advanced", "Expert"]
+difficulty = ["BASIC", "ADVANCED", "EXPERT"]
 
-difficulty_label = Label( main_window, font=("Georgia", 10), bg="#cfc1e3",  text="        Difficulty:          " )
+difficulty_label = Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="  DIFFICULTY:  " )
 difficulty_label.grid(row=5, column=1, pady=15)
 
 combo_difficulty = ttk.Combobox( main_window, values=difficulty, width=15 )
@@ -169,7 +173,7 @@ combo_difficulty.grid(row=5, column=3, sticky="w")
 combo_difficulty.current(0)
 
 #Radiobuttons, and label for number of questions entry
-radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  No. Of Questions:  " )
+radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO. OF QUESTIONS:  " )
 radio_label.grid(row=3, column=1, pady=15, sticky="w")
 
 #Create the radiobuttons 
@@ -184,21 +188,19 @@ radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg
 radio3.grid(row=3, column=4)
 
 #Create the start, quit and view highscore buttons
-#Create the Quit button
-quit_button = Button( main_window, font=("Georgia", 10), text="Quit", command=quit_app, width=15, background="#e5dff0")
-quit_button.grid(row=7, column=1, pady=20)
+quit_button = Button( main_window, font=("Georgia", 10), text="QUIT", command=quit_app, width=15, background="#e5dff0")
+quit_button.grid(row=7, column=1, padx=5, pady=30 )
 
-#Create the Start button
-start_button = Button(main_window, font=("Georgia", 10), text="Start", command=check_inputs, width=15, background="#e5dff0")
-start_button.grid(row=7, column=2, pady=20)
+start_button = Button( main_window, font=("Georgia", 10), text="START", command=check_inputs, width=15, background="#e5dff0")
+start_button.grid(row=7, column=2, padx=5, pady=30)
 
-#Create the Highscore button
-highscore_button = Button(main_window, font=("Georgia", 10), command = view_highscores, text="View Highscores", width=14, background="#e5dff0")
-highscore_button.grid(row=7, column=3, pady=20)
+highscore_button = Button( main_window, font=("Georgia", 10), command=view_highscores, text="  VIEW HIGHSCORES  ",
+    width=19, background="#e5dff0" )
+highscore_button.grid(row=7, column=3, padx=5, pady=30 )
 
 #Create the main window
-main_window.geometry("745x500")
+main_window.geometry("680x500")
 main_window.configure(background="#dfd5ed")
-main_window.title("Math Quiz App")
+main_window.title("Maths Quiz App")
 
 main_window.mainloop()
