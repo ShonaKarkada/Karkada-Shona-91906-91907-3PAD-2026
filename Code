@@ -11,15 +11,16 @@ main_window = Tk()
 
 logo = PhotoImage(file="img2.png")
 image_resized = logo.subsample(2,2)
-image_label = Label(main_window, image=image_resized, bg="#dfd5ed")
+image_label = Label(main_window, image=image_resized, bg="#dfd5ed",)
 image_label.grid(row=0, column=0, columnspan=5, pady=15)
 
 
 #Quit subroutine
+
 def quit_app():
-    main_window.destroy()
     with open(HIGHSCORE_FILE, "w") as file:
         file.write("")
+    main_window.destroy()
     
 #Highscore text file
 HIGHSCORE_FILE = "Highscores.txt"
@@ -33,13 +34,12 @@ class Student:
         self.year_level = year_level
         self.score = 0
         self.level = 1
-#Create a function that adds a point to the overall score when a correct answer is entered
+#Create an object that adds a point to the overall score when a correct answer is entered
     def add_score(self):
         self.score += 1
 
-#Define the required functions
-
-#Define the error_window to be displayed when an incorrect input is identified
+#Define the required functions and windows
+#Define the error_window to be displayed when an invalid input is entered
 def error_window(message):
     error = tk.Toplevel(main_window)
     error.title("Input Error")
@@ -51,40 +51,57 @@ def error_window(message):
     Button(error, text="OK", command=error.destroy, width=10).pack()
 
 #Define the function to be carried out when the finish button is pressed
-def save_highscore(student): 
+def save_highscore(student):
     with open(HIGHSCORE_FILE, "a") as file:
-        file.write(f"{student.username} - {student.score}\n")
+        file.write(f"{student.username},{student.score}\n")
 
 #Define the view_highscores button on the main window
 def view_highscores():
     highscore_window = tk.Toplevel(main_window)
     highscore_window.title("Highscores Window")
-    highscore_window.geometry("350x350")
+    highscore_window.geometry("312x320")
     highscore_window.configure(bg="#dfd5ed")
 
-#Format the layout for the highscore window
-    Label(highscore_window, text="HIGHSCORES", font=("Georgia", 10), bg="#cfc1e3").pack(pady=10)
+    Label(highscore_window, text="   HIGHSCORES   ", font=("Georgia", 10),bg="#cfc1e3" ).grid(row=0, column=1, columnspan=3, pady=10)
 
+#Prompt the program to retrieve the required information from the text file
     try:
+        scores = []
 
         with open(HIGHSCORE_FILE, "r") as file:
 
-            scores = file.readlines()
+            for line in file:
+                line = line.strip()
 
-            if len(scores) == 0:
+                if line != "":
+                    username, score = line.split(",")
+                    scores.append((username, int(score)))
 
-                Label( highscore_window, text="No highscores yet", bg="#dfd5ed").pack()
+        scores.sort(key=lambda x: x[1], reverse=True)
 
-            else:
+        #Create the table layout
+        Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg="#cfc1e3", font=("Georgia", 8,)).grid(row=1, column=1, padx=3,)
 
-                for score in scores:
+        Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8,) ).grid(row=1, column=2, padx=3,  )
 
-                    Label( highscore_window, text=score.strip(), bg="#dfd5ed", font=("Georgia", 10)).pack()
-            Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
+        Label(highscore_window, text="SCORE", width=10, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8) ).grid(row=1, column=3, padx=3, )
+
+        #Prompt the program to only display the user's top 5 scores, in order
+        for rank, (username, score) in enumerate(scores[:5], start=1):
+
+            Label(highscore_window, text=rank, bg="#dfd5ed" ).grid(row=rank + 1, column=1)
+
+            Label(highscore_window, text=username, bg="#dfd5ed" ).grid(row=rank + 1, column=2)
+
+            Label(highscore_window, text=score, bg="#dfd5ed" ).grid(row=rank + 1, column=3)
+
+        if len(scores) == 0:
+            Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=1, pady=10, columnspan=3)
 
     except FileNotFoundError:
-        Label( highscore_window, text="No highscores found.", bg="#dfd5ed").pack()
-        Button(highscore_window, text="Close", command=highscore_window.destroy, width=10).pack()
+        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=1, pady=10, columnspan=3)
+
+    Button( highscore_window, text="CLOSE", font=("Georgia", 8), command=highscore_window.destroy,width=12 ).grid(row=8, column=1, columnspan=3, pady=25)
         
 def start_quiz():
 
@@ -111,7 +128,7 @@ def check_inputs():
     year_level = entry_year_level.get().strip()
 
 
-#Username Validation
+#Username Validation check
     if username == "":
         error_window("Username cannot be blank.")
         return
@@ -139,7 +156,7 @@ def check_inputs():
         error_window("Year level must be between 1 and 13.")
         return
 
-#Combo Box Validation
+#Combo Box Validation check
     if combo_difficulty.get() not in ["ADVANCED", "BASIC", "EXPERT",
                                       "advanced", "basic", "expert",
                                       "Advanced", "Basic", "Expert", ]:
@@ -147,26 +164,27 @@ def check_inputs():
         return
 
 
-#Create Student Object
+#Create the Student Object for the Student Class
     global current_student
     
     current_student = Student( username, age, year_level )
     start_quiz()
 
-#Create radio buttons to ask the user to specifiy the required number of questions
+#Radio buttons to prompt the user to specifiy the required number of questions
 radio_var = tk.StringVar(value="5")
 
 #Prompt the user to enter the required details: username, age, and year level
 
 #Create labels for the entry boxes, and for the displayed welcome message
 
-Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=1, column=0, columnspan=5, pady=15)
+Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10 ), bg="#cfc1e3" ).grid(row=1, column=0, columnspan=5, pady=15)
 
 Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=0, padx=10, pady=10)
 
 Label( main_window, text=" AGE: ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=2, padx=10, sticky = "w")
 
-Label( main_window, text="  YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=3, padx=10)
+Label( main_window, text="   YEAR LEVEL:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=2, column=3, padx=10)
+
 #Create and format the entry boxes
 entry_username = Entry(main_window, background="#e5dff0", width=18)
 entry_username.grid(row=2, column=1, padx=10)
@@ -191,8 +209,7 @@ combo_difficulty.current(0)
 radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO. OF QUESTIONS:  " )
 radio_label.grid(row=4, column=0, pady=15, columnspan=2,)
 
-#Create the radiobuttons 
-
+#Create the 3 radiobuttons, with values of 5, 10, and 15
 radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#dfd5ed", font=("Georgia", 10) )
 radio1.grid(row=4, column=2)
 
@@ -218,3 +235,4 @@ main_window.configure(background="#dfd5ed")
 main_window.title("Maths Quiz App")
 
 main_window.mainloop()
+
