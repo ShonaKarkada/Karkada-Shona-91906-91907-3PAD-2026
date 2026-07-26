@@ -3,6 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+import random
 
 main_window = Tk()
 
@@ -11,28 +12,149 @@ main_window = Tk()
 def quit_app():
     main_window.destroy()
 
+#Highscore text file
+HIGHSCORE_FILE = "highscores.txt"
+
+#Create the Student Class, to store student information and add to the score
+class Student:
+
+    def __init__(self, username, age, year_level):
+        self.username = username
+        self.age = age
+        self.year_level = year_level
+        self.score = 0
+        self.level = 1
+#Create a function that adds a point to the overall score when a correct answer is entered
+    def add_score(self):
+        self.score += 1
+
+
+#Define the required functions
+
+#Define the error_window to be displayed when an incorrect input is identified
+def error_window(message):
+    error = tk.Toplevel(main_window)
+    error.title("Input Error")
+    error.geometry("300x120")
+    error.configure(bg="#dfd5ed")
+
+    Label(error, text=message, fg="red", bg="#dfd5ed", font= ("Georgia", 10)).pack(pady=20)
+
+    Button(error, text="OK", command=error.destroy, width=10).pack()
+
+#Define the function to be carried out by the program, when the finish button is pressed
+def save_highscore(student):
+    with open(HIGHSCORE_FILE, "a") as file:
+        file.write(f"{student.username},{student.score}\n")
+
+#Define the view_highscores button on the main window
+def view_highscores():
+    highscore_window = tk.Toplevel(main_window)
+    highscore_window.title("Highscores")
+    highscore_window.geometry("350x350")
+    highscore_window.configure(bg="#dfd5ed")
+
+#Format the layout for the highscore window
+    Label(highscore_window, text="Highscores", font=("Georgia", 14, "bold"), bg="#dfd5ed").pack(pady=10)
+
+    try:
+
+        with open(HIGHSCORE_FILE, "r") as file:
+
+            scores = file.readlines()
+
+            if len(scores) == 0:
+
+                Label( highscore_window, text="No highscores yet", bg="#dfd5ed").pack()
+
+            else:
+
+                for score in scores:
+
+                    Label( highscore_window, text=score.strip(), bg="#dfd5ed", font=("Georgia", 10)).pack()
+
+    except FileNotFoundError:
+
+        Label( highscore_window, text="No highscores found.", bg="#dfd5ed").pack()
+
+
+def start_quiz():
+
+#Create the question_screen window, where users will be able to engage/interact with the quiz app
+    quiz_window = tk.Toplevel(main_window)
+    quiz_window.title("Question Screen")
+    quiz_window.geometry("600x400")
+    quiz_window.configure(bg="#dfd5ed")
+
+#Create and format all the labels for the question screen
+    Label(quiz_window, text=f"Student: {current_student.username}", font=("Georgia", 11, "bold"), bg="#dfd5ed").pack(pady=5)
+    Label( quiz_window, text=f"Age: {current_student.age}", bg="#dfd5ed").pack()
+    Label( quiz_window, text=f"Year Level: {current_student.year_level}", bg="#dfd5ed" ).pack()
+    Label( quiz_window, text=f"Difficulty: {combo_difficulty.get()}", bg="#dfd5ed" ).pack()
+    Label( quiz_window, text=f"Questions: {radio_var.get()}", bg="#dfd5ed" ).pack()
+    Label( quiz_window, text="\nQuestion", font=("Georgia", 12), bg="#dfd5ed" ).pack(pady=20)
+    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).pack(pady=10)
+
+#Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
+def check_inputs():
+    username = entry_username.get().strip()
+    age = entry_age.get().strip()
+    year_level = entry_year_level.get().strip()
+
+#Username Validation
+
+    if username == "":
+        error_window("Username cannot be blank.")
+        return
+
+    if not username.replace(" ", "").isalpha():
+        error_window("Username must contain letters only.")
+        return
+
+#Age Validation
+    if not age.isdigit():
+        error_window("Age must be numeric.")
+        return
+    age = int(age)
+    if age < 0 or age > 120:
+        error_window("Age must be between 0 and 120.")
+        return
+
+#Year Level Validation
+    if not year_level.isdigit():
+        error_window("Year level must be numeric.")
+        return
+    year_level = int(year_level)
+    if year_level < 1 or year_level > 13:
+        error_window("Year level must be between 1 and 13.")
+        return
+
+#Create Student Object
+    global current_student
+    current_student = Student( username, age, year_level )
+    start_quiz()
+
 
 #Create radio buttons to ask the user to specifiy the required number of questions
 radio_var = tk.StringVar(value="5")
 
 #Prompt the user to enter the required details: username, age, and year_level
-#Username entry box
-Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="      Username       " ).grid(column=0, row=1, padx=5, pady=10)
 
+#Create labels for the entry boxes, and for the displayed welcome message
+Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="      Username       " ).grid(column=0, row=1, padx=5, pady=10)
+Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="          Age           " ).grid(column=2, row=1, padx=5)
+Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="  Year Level  " ).grid(column=4, row=1, padx=5)
+
+#Create and format the entry boxes
+#Username entry box
 entry_username = Entry(main_window, background="#e5dff0", width=16)
 entry_username.grid(column=1, row=1, padx=5)
 
-
-
 #Age entry box
-Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="          Age           " ).grid(column=2, row=1, padx=5)
-
 entry_age = Entry(main_window, background="#e5dff0", width=16)
 entry_age.grid(column=3, row=1, padx=5)
 
 #Year Level entry box
-Label( main_window, font=("Georgia", 10), bg="#cfc1e3", text="  Year Level  " ).grid(column=4, row=1, padx=5)
-
 entry_year_level = Entry(main_window, background="#e5dff0", width=16)
 entry_year_level.grid(column=5, row=1, padx=5)
 
@@ -50,9 +172,9 @@ combo_difficulty.current(0)
 radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  No. Of Questions:  " )
 radio_label.grid(row=3, column=1, pady=15, sticky="w")
 
-#Incorporate stickey = "w" to align the radio label to the left
+#Create the radiobuttons 
 
-radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", bg="#dfd5ed", font=("Georgia", 10) )
+radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#dfd5ed", font=("Georgia", 10) )
 radio1.grid(row=3, column=2)
 
 radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
@@ -67,30 +189,12 @@ quit_button = Button( main_window, font=("Georgia", 10), text="Quit", command=qu
 quit_button.grid(row=7, column=1, pady=20)
 
 #Create the Start button
-start_button = Button( main_window, font=("Georgia", 10), text="Start", width=15, background="#e5dff0")
+start_button = Button(main_window, font=("Georgia", 10), text="Start", command=check_inputs, width=15, background="#e5dff0")
 start_button.grid(row=7, column=2, pady=20)
+
 #Create the Highscore button
-highscore_button = Button(main_window, font=("Georgia", 10), text="View Highscores", width=14, background="#e5dff0")
+highscore_button = Button(main_window, font=("Georgia", 10), command = view_highscores, text="View Highscores", width=14, background="#e5dff0")
 highscore_button.grid(row=7, column=3, pady=20)
-
-def error_window(message):
-    error_window = tk.Toplevel(window)
-    error_window.title("Error")
-    tk.Label(error_window, text=" ERROR! PLEASE ENTER A VALID INPUT", fg = "red")
-    error_window.geometry("70x50")
-    error_window.configure(bg="#f9f9f9")
-
-def check_inputs():
-    input_check = 0
-    for i in range(4):
-        Label(main_window, text="               ", bg="#dfd5ed").grid(column=2, row=i)
-
-#Check that username is not blank, set error text if blank  
-    name = entry_username.get().strip()
-    if not name.replace(" ", "").isalpha():
-        error_window()
-        input_check = 1
-
 
 #Create the main window
 main_window.geometry("745x500")
