@@ -11,7 +11,7 @@ main_window = Tk()
 
 logo = PhotoImage(file="img2.png")
 image_resized = logo.subsample(2,2)
-image_label = Label(main_window, image=image_resized, bg="#dfd5ed",)
+image_label = Label(main_window, image=image_resized, bg="#fad7e4",)
 image_label.grid(row=0, column=0, columnspan=5, pady=15)
 
 
@@ -34,9 +34,113 @@ class Student:
         self.year_level = year_level
         self.score = 0
         self.level = 1
+
+        self.current_question = 0
+        self.quiz_questions = []
 #Create an object that adds a point to the overall score when a correct answer is entered
     def add_score(self):
         self.score += 1
+    def next_question(self):
+        self.current_question += 1
+
+#Create questions for the question screen
+questions = [
+
+#Basic Questions
+
+{
+    "difficulty":"BASIC",
+    "question":"What is 5 + 3?",
+    "choices":["6","7","8","9"],
+    "answer":"8"
+},
+{
+    "difficulty":"BASIC",
+    "question":"What is 1 x 5?",
+    "choices":["6","50","4","5"],
+    "answer":"5"
+},
+
+{
+    "difficulty":"BASIC",
+    "question":"What is 9 - 4?",
+    "choices":["3","5","6","7"],
+    "answer":"5"
+},
+
+{
+    "difficulty":"BASIC",
+    "question":"What is 7 × 6?",
+    "choices":["36","42","48","40"],
+    "answer":"42"
+},
+
+{
+    "difficulty":"BASIC",
+    "question":"What is 18 ÷ 3?",
+    "choices":["5","6","7","8"],
+    "answer":"6"
+},
+
+{
+    "difficulty":"BASIC",
+    "question":"What is 15 + 9?",
+    "choices":["24","25","26","23"],
+    "answer":"24"
+},{
+    "difficulty":"BASIC",
+    "question":"What is 4+7?",
+    "choices":["11","28","3","-3"],
+    "answer":"8"
+},
+
+#Advanced Questions
+
+{
+    "difficulty":"ADVANCED",
+    "question":"What is 24 × 6?",
+    "choices":["124","144","134","154"],
+    "answer":"144"
+},
+
+{
+    "difficulty":"ADVANCED",
+    "question":"36 ÷ 4 = ?",
+    "choices":["8","9","10","12"],
+    "answer":"9"
+},
+
+{
+    "difficulty":"ADVANCED",
+    "question":"17² = ?",
+    "choices":["279","289","299","309"],
+    "answer":"289"
+},
+
+#Expert Questions
+{
+    "difficulty":"EXPERT",
+    "question":"√144 = ?",
+    "choices":["10","11","12","13"],
+    "answer":"12"
+},
+
+{
+    "difficulty":"EXPERT",
+    "question":"5³ = ?",
+    "choices":["25","75","100","125"],
+    "answer":"125"
+},
+
+{
+    "difficulty":"EXPERT",
+    "question":"15² = ?",
+    "choices":["215","225","235","245"],
+    "answer":"225"
+},
+
+
+]
 
 #Define the required functions and windows
 #Define the error_window to be displayed when an invalid input is entered
@@ -44,9 +148,9 @@ def error_window(message):
     error = tk.Toplevel(main_window)
     error.title("Input Error")
     error.geometry("300x120")
-    error.configure(bg="#dfd5ed")
+    error.configure(bg="#fad7e4")
 
-    Label(error, text=message, fg="red", bg="#dfd5ed", font= ("Georgia", 10)).pack(pady=20)
+    Label(error, text=message, fg="red", bg="#fad7e4", font= ("Georgia", 10)).pack(pady=20)
 
     Button(error, text="OK", command=error.destroy, width=10).pack()
 
@@ -60,7 +164,7 @@ def view_highscores():
     highscore_window = tk.Toplevel(main_window)
     highscore_window.title("Highscores Window")
     highscore_window.geometry("312x320")
-    highscore_window.configure(bg="#dfd5ed")
+    highscore_window.configure(bg="#fad7e4")
 
     Label(highscore_window, text="   HIGHSCORES   ", font=("Georgia", 10),bg="#cfc1e3" ).grid(row=0, column=1, columnspan=3, pady=10)
 
@@ -78,48 +182,121 @@ def view_highscores():
                     scores.append((username, int(score)))
 
         scores.sort(key=lambda x: x[1], reverse=True)
+        if len(scores) > 0:
+            #Create the table layout
+            Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg="#cfc1e3", font=("Georgia", 8,)).grid(row=1, column=1, padx=3,)
 
-        #Create the table layout
-        Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg="#cfc1e3", font=("Georgia", 8,)).grid(row=1, column=1, padx=3,)
+            Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8,) ).grid(row=1, column=2, padx=3,  )
 
-        Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8,) ).grid(row=1, column=2, padx=3,  )
+            Label(highscore_window, text="SCORE", width=10, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8) ).grid(row=1, column=3, padx=3, )
 
-        Label(highscore_window, text="SCORE", width=10, borderwidth=0.5, relief="solid", bg="#cfc1e3", font=("Georgia", 8) ).grid(row=1, column=3, padx=3, )
+            #Prompt the program to only display the user's top 5 scores, in order
+            for rank, (username, score) in enumerate(scores[:5], start=1):
 
-        #Prompt the program to only display the user's top 5 scores, in order
-        for rank, (username, score) in enumerate(scores[:5], start=1):
+                Label(highscore_window, text=rank, bg="#fad7e4" ).grid(row=rank + 1, column=1)
 
-            Label(highscore_window, text=rank, bg="#dfd5ed" ).grid(row=rank + 1, column=1)
+                Label(highscore_window, text=username.capitalize(), bg="#fad7e4" ).grid(row=rank + 1, column=2)
 
-            Label(highscore_window, text=username, bg="#dfd5ed" ).grid(row=rank + 1, column=2)
+                Label(highscore_window, text=score, bg="#fad7e4" ).grid(row=rank + 1, column=3)
 
-            Label(highscore_window, text=score, bg="#dfd5ed" ).grid(row=rank + 1, column=3)
-
-        if len(scores) == 0:
-            Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=1, pady=10, columnspan=3)
+        else:
+                Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#fad7e4").grid(row=7, column=1, pady=10, columnspan=3)
 
     except FileNotFoundError:
-        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=1, pady=10, columnspan=3)
+        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#fad7e4").grid(row=7, column=1, pady=10, columnspan=3)
 
     Button( highscore_window, text="CLOSE", font=("Georgia", 8), command=highscore_window.destroy,width=12 ).grid(row=8, column=1, columnspan=3, pady=25)
         
 def start_quiz():
-
-#Create the question_screen window, where users will be able to engage/interact with the quiz app
+#Create the quiz window
     quiz_window = tk.Toplevel(main_window)
     quiz_window.title("Question Screen")
     quiz_window.geometry("610x400")
-    quiz_window.configure(bg="#dfd5ed")
+    quiz_window.configure(bg="#fad7e4")
 
+#Prompt the program to only select questions based on difficulty and number chosen
+    difficulty = combo_difficulty.get()
+    number_questions = int(radio_var.get())
+
+    available_questions = []
+
+    for question in questions:
+        if question["difficulty"] == difficulty:
+            available_questions.append(question)
+
+    random.shuffle(available_questions)
+
+    current_student.quiz_questions = available_questions[:number_questions]
+    current_student.current_question = 0
 
     uppercase_username = current_student.username.upper()
 
+#Student information
+    Label( quiz_window, text=f"STUDENT: {uppercase_username}    AGE: {current_student.age}    YEAR LEVEL: {current_student.year_level}    DIFFICULTY: {difficulty}", font=("Georgia", 8), bg="#fad7e4" ).grid(row=1, column=0, columnspan=4, pady=10)
 
-#Create and format all the labels for the question screen
-    Label(quiz_window, text=f"    STUDENT:  {uppercase_username}         AGE:  {current_student.age}         YEAR LEVEL:  {current_student.year_level}           DIFFICULTY:  {combo_difficulty.get()}          QUESTIONS:  {radio_var.get()}           ",font=("Georgia", 8,) ).grid(column = 1, row = 1, pady = 8, columnspan = 18)
 
-    Label( quiz_window, text="\nQuestion", font=("Georgia", 14), bg="#dfd5ed" ).grid(column = 9, row = 6)
-    Button( quiz_window, text="FINISH",font=("Georgia", 10), width=15, command=lambda: save_highscore(current_student) ).grid(column = 9, row = 10, pady=50, padx = 25)
+    question_number = Label( quiz_window, text="", font=("Georgia", 10), bg="#fad7e4")
+    question_number.grid(row=1, column=4)
+
+#Question label
+    question_label = Label( quiz_window, text="", font=("Georgia", 14), bg="#fad7e4" )
+    question_label.grid(row=2, column=0, columnspan=4, pady=20)
+
+#Create radiobuttons to allow the user to select an answer from 4 options
+    answer_var = StringVar()
+
+    # Radio buttons
+    radio1 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio1.grid(row=3, column=0, sticky="w", padx=40)
+
+    radio2 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio2.grid(row=4, column=0, sticky="w", padx=40)
+
+    radio3 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio3.grid(row=5, column=0, sticky="w", padx=40)
+
+    radio4 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio4.grid(row=6, column=0, sticky="w", padx=40)
+
+#Display current question
+    def show_question():
+
+        q = current_student.quiz_questions[current_student.current_question]
+        question_number.config( text=f"Question {current_student.current_question + 1} of {len (current_student.quiz_questions)}" )
+        question_label.config(text=q["question"])
+
+        radio1.config(text=q["choices"][0], value = q["choices"][0])
+        radio2.config(text=q["choices"][1], value = q["choices"][1])
+        radio3.config(text=q["choices"][2], value =q["choices"][2])
+        radio4.config(text=q["choices"][3], value = q["choices"][3])
+
+        answer_var.set("")
+
+    # Move to next question
+    def next_question():
+
+        q = current_student.quiz_questions[current_student.current_question]
+
+        if answer_var.get() == q["answer"]:
+            current_student.add_score()
+
+        current_student.next_question()
+
+        if current_student.current_question >= len(current_student.quiz_questions):
+
+            save_highscore(current_student)
+
+            quiz_window.destroy()
+
+            return
+
+        show_question()
+
+    # Next button
+    Button( quiz_window, text="NEXT", font=("Georgia", 10), width=15, command=next_question ).grid(row=7, column=0, pady=30)
+
+    # Show the first question
+    show_question()
 
 #Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
 def check_inputs():
@@ -210,13 +387,13 @@ radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO
 radio_label.grid(row=4, column=0, pady=15, columnspan=2,)
 
 #Create the 3 radiobuttons, with values of 5, 10, and 15
-radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#dfd5ed", font=("Georgia", 10) )
+radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#fad7e4", font=("Georgia", 10) )
 radio1.grid(row=4, column=2)
 
-radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
+radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#fad7e4", font=("Georgia", 10) )
 radio2.grid(row=4, column=3)
 
-radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#dfd5ed", font=("Georgia", 10) )
+radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#fad7e4", font=("Georgia", 10) )
 radio3.grid(row=4, column=4)
 
 #Create the start, quit and view highscore buttons
@@ -231,7 +408,7 @@ highscore_button.grid(row=8, column=3, padx=5, pady=30 )
 
 #Create the main window
 main_window.geometry("700x500")
-main_window.configure(background="#dfd5ed")
+main_window.configure(background="#fad7e4")
 main_window.title("Maths Quiz App")
 
 main_window.mainloop()
