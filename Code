@@ -11,7 +11,7 @@ main_window = Tk()
 
 logo = PhotoImage(file="img2.png")
 image_resized = logo.subsample(2,2)
-image_label = Label(main_window, image=image_resized, bg="#fad7e4",)
+image_label = Label(main_window, image=image_resized, bg="#dfd5ed",)
 image_label.grid(row=0, column=0, columnspan=5, pady=15)
 
 
@@ -148,9 +148,9 @@ def error_window(message):
     error = tk.Toplevel(main_window)
     error.title("Input Error")
     error.geometry("300x120")
-    error.configure(bg="#fad7e4")
+    error.configure(bg="#dfd5ed")
 
-    Label(error, text=message, fg="red", bg="#fad7e4", font= ("Georgia", 10)).pack(pady=20)
+    Label(error, text=message, fg="red", bg="#dfd5ed", font= ("Georgia", 10)).pack(pady=20)
 
     Button(error, text="OK", command=error.destroy, width=10).pack()
 
@@ -164,7 +164,7 @@ def view_highscores():
     highscore_window = tk.Toplevel(main_window)
     highscore_window.title("Highscores Window")
     highscore_window.geometry("312x320")
-    highscore_window.configure(bg="#fad7e4")
+    highscore_window.configure(bg="#dfd5ed")
 
     Label(highscore_window, text="   HIGHSCORES   ", font=("Georgia", 10),bg="#cfc1e3" ).grid(row=0, column=1, columnspan=3, pady=10)
 
@@ -193,17 +193,17 @@ def view_highscores():
             #Prompt the program to only display the user's top 5 scores, in order
             for rank, (username, score) in enumerate(scores[:5], start=1):
 
-                Label(highscore_window, text=rank, bg="#fad7e4" ).grid(row=rank + 1, column=1)
+                Label(highscore_window, text=rank, bg="#dfd5ed" ).grid(row=rank + 1, column=1)
 
-                Label(highscore_window, text=username.capitalize(), bg="#fad7e4" ).grid(row=rank + 1, column=2)
+                Label(highscore_window, text=username.capitalize(), bg="#dfd5ed" ).grid(row=rank + 1, column=2)
 
-                Label(highscore_window, text=score, bg="#fad7e4" ).grid(row=rank + 1, column=3)
+                Label(highscore_window, text=score, bg="#dfd5ed" ).grid(row=rank + 1, column=3)
 
         else:
-                Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#fad7e4").grid(row=7, column=1, pady=10, columnspan=3)
+                Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=2, pady=10, columnspan=3)
 
     except FileNotFoundError:
-        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#fad7e4").grid(row=7, column=1, pady=10, columnspan=3)
+        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#dfd5ed").grid(row=7, column=1, pady=10, columnspan=3)
 
     Button( highscore_window, text="CLOSE", font=("Georgia", 8), command=highscore_window.destroy,width=12 ).grid(row=8, column=1, columnspan=3, pady=25)
         
@@ -212,7 +212,7 @@ def start_quiz():
     quiz_window = tk.Toplevel(main_window)
     quiz_window.title("Question Screen")
     quiz_window.geometry("610x400")
-    quiz_window.configure(bg="#fad7e4")
+    quiz_window.configure(bg="#dfd5ed")
 
 #Prompt the program to only select questions based on difficulty and number chosen
     difficulty = combo_difficulty.get()
@@ -232,30 +232,30 @@ def start_quiz():
     uppercase_username = current_student.username.upper()
 
 #Student information
-    Label( quiz_window, text=f"STUDENT: {uppercase_username}    AGE: {current_student.age}    YEAR LEVEL: {current_student.year_level}    DIFFICULTY: {difficulty}", font=("Georgia", 8), bg="#fad7e4" ).grid(row=1, column=0, columnspan=4, pady=10)
+    Label( quiz_window, text=f"STUDENT: {uppercase_username}    AGE: {current_student.age}    YEAR LEVEL: {current_student.year_level}    DIFFICULTY: {difficulty}", font=("Georgia", 8), bg="#dfd5ed" ).grid(row=1, column=0, columnspan=4, pady=10)
 
 
-    question_number = Label( quiz_window, text="", font=("Georgia", 10), bg="#fad7e4")
+    question_number = Label( quiz_window, text="", font=("Georgia", 10), bg="#dfd5ed")
     question_number.grid(row=1, column=4)
 
 #Question label
-    question_label = Label( quiz_window, text="", font=("Georgia", 14), bg="#fad7e4" )
+    question_label = Label( quiz_window, text="", font=("Georgia", 14), bg="#dfd5ed" )
     question_label.grid(row=2, column=0, columnspan=4, pady=20)
 
 #Create radiobuttons to allow the user to select an answer from 4 options
     answer_var = StringVar()
 
     # Radio buttons
-    radio1 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio1 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#dfd5ed")
     radio1.grid(row=3, column=0, sticky="w", padx=40)
 
-    radio2 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio2 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#dfd5ed")
     radio2.grid(row=4, column=0, sticky="w", padx=40)
 
-    radio3 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio3 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#dfd5ed")
     radio3.grid(row=5, column=0, sticky="w", padx=40)
 
-    radio4 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#fad7e4")
+    radio4 = Radiobutton(quiz_window, text="", variable=answer_var, bg="#dfd5ed")
     radio4.grid(row=6, column=0, sticky="w", padx=40)
 
 #Display current question
@@ -387,13 +387,13 @@ radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO
 radio_label.grid(row=4, column=0, pady=15, columnspan=2,)
 
 #Create the 3 radiobuttons, with values of 5, 10, and 15
-radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#fad7e4", font=("Georgia", 10) )
+radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", borderwidth = 5, bg="#dfd5ed", font=("Georgia", 10) )
 radio1.grid(row=4, column=2)
 
-radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#fad7e4", font=("Georgia", 10) )
+radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
 radio2.grid(row=4, column=3)
 
-radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#fad7e4", font=("Georgia", 10) )
+radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#dfd5ed", font=("Georgia", 10) )
 radio3.grid(row=4, column=4)
 
 #Create the start, quit and view highscore buttons
@@ -408,7 +408,7 @@ highscore_button.grid(row=8, column=3, padx=5, pady=30 )
 
 #Create the main window
 main_window.geometry("700x500")
-main_window.configure(background="#fad7e4")
+main_window.configure(background="#dfd5ed")
 main_window.title("Maths Quiz App")
 
 main_window.mainloop()
