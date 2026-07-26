@@ -88,14 +88,16 @@ def start_quiz():
     quiz_window.geometry("600x400")
     quiz_window.configure(bg="#dfd5ed")
 
+
+
 #Create and format all the labels for the question screen
-    Label(quiz_window, text=f"Student: {current_student.username}",bg="#dfd5ed").pack(pady=5)
-    Label( quiz_window, text=f"Age: {current_student.age}", bg="#dfd5ed").pack()
-    Label( quiz_window, text=f"Year Level: {current_student.year_level}", bg="#dfd5ed" ).pack()
-    Label( quiz_window, text=f"Difficulty: {combo_difficulty.get()}", bg="#dfd5ed" ).pack()
-    Label( quiz_window, text=f"Questions: {radio_var.get()}", bg="#dfd5ed" ).pack()
-    Label( quiz_window, text="\nQuestion", font=("Georgia", 12), bg="#dfd5ed" ).pack(pady=20)
-    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).pack(pady=10)
+    Label(quiz_window, text=f"STUDENT: {current_student.username}",bg="#dfd5ed").grid(column = 1, row = 0)
+    Label( quiz_window, text=f"Age: {current_student.age}", bg="#dfd5ed").grid(column = 3, row = 0)
+    Label( quiz_window, text=f"Year Level: {current_student.year_level}", bg="#dfd5ed" ).grid(column =5, row = 0)
+    Label( quiz_window, text=f"Difficulty: {combo_difficulty.get()}", bg="#dfd5ed" ).grid(column = 7, row = 0)
+    Label( quiz_window, text=f"Questions: {radio_var.get()}", bg="#dfd5ed" ).grid(column = 1, row = 0)
+    Label( quiz_window, text="\nQuestion", font=("Georgia", 12), bg="#dfd5ed" ).grid(column = 7, row = 6)
+    Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).grid(column = 7, row = 10)
 
 #Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
 def check_inputs():
@@ -173,6 +175,8 @@ difficulty_label = Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="
 difficulty_label.grid(row=5, column=1, pady=15)
 
 combo_difficulty = ttk.Combobox( main_window, values=difficulty, width=15 )
+combo_difficulty.set("Select Option")
+
 combo_difficulty.grid(row=5, column=3, sticky="w")
 combo_difficulty.current(0)
 
