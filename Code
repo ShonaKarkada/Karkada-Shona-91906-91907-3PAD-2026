@@ -56,7 +56,7 @@ def view_highscores():
     highscore_window.configure(bg="#dfd5ed")
 
 #Format the layout for the highscore window
-    Label(highscore_window, text="Highscores", font=("Georgia", 14, "bold"), bg="#dfd5ed").pack(pady=10)
+    Label(highscore_window, text="Highscores", font=("Georgia", 10 ), bg="#dfd5ed").pack(pady=10)
 
     try:
 
@@ -109,13 +109,16 @@ def check_inputs():
         error_window("Username cannot be blank.")
         return
 
-    if not username.replace(" ", "").isalpha():
+    if not username.isalpha():
         error_window("Username must contain letters only.")
         return
 
 #Age Validation
+    if age == "":
+        error_window("Age cannot be blank.")
+        return
     if not age.isdigit():
-        error_window("Age must be numeric.")
+        error_window("Input must contain digits only.")
         return
     age = int(age)
     if age < 0 or age > 120:
@@ -123,17 +126,20 @@ def check_inputs():
         return
 
 #Year Level Validation
+    if year_level == "":
+        error_window("Year level cannot be blank.")
+        return
     if not year_level.isdigit():
-        error_window("Year level must be numeric.")
+        error_window("Year level must contain digits only.")
         return
     year_level = int(year_level)
     if year_level < 1 or year_level > 13:
-        error_window("Year level must be between 1 and 13.")
+        error_window("Year level must be between 1 - 13.")
         return
 
 #Create Student Object
     global current_student
-    current_student = Student( username, age, year_level )
+    current_student = Student( username, age, year_level)
     start_quiz()
 
 
@@ -143,9 +149,7 @@ radio_var = tk.StringVar(value="5")
 #Prompt the user to enter the required details: username, age, and year_level
 
 #Create labels for the entry boxes, and for the displayed welcome message
-Label(
-    main_window,
-    text="WELCOME TO THE MATHS QUIZ APP!  ENTER YOUR DETAILS BELOW TO BEGIN . . .", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
+Label(main_window,text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
 
 Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=0, padx=10, pady=10)
 
@@ -159,7 +163,7 @@ entry_username.grid(row=1, column=1, padx=10)
 entry_age = Entry(main_window, background="#e5dff0", width=10)
 entry_age.grid(row=1, column=2, padx=10, sticky = "e")
 
-entry_year_level = Entry(main_window, background="#e5dff0", width=10)
+entry_year_level = Entry(main_window, background="#e5dff0", width=16)
 entry_year_level.grid(row=1, column=4, padx=10)
 
 #Create a combobox that stores the user's difficulty option
@@ -199,7 +203,7 @@ highscore_button = Button( main_window, font=("Georgia", 10), command=view_highs
 highscore_button.grid(row=7, column=3, padx=5, pady=30 )
 
 #Create the main window
-main_window.geometry("680x500")
+main_window.geometry("700x500")
 main_window.configure(background="#dfd5ed")
 main_window.title("Maths Quiz App")
 
