@@ -1,41 +1,32 @@
 # Karkada, Shona - 91906 - 3PAD Assessment
 
+# Import tkinter - GUI
 from tkinter import *
 from tkinter import ttk
 import random
 import tkinter as tk
 from PIL import Image, ImageTk
-# Functions
 
+main_window = Tk()
+
+
+# Quit subroutine
 def quit_app():
     main_window.destroy()
 
+
 def save_selection():
     selected_difficulty = combo_difficulty.get()
-    selected_questions = radio_var.get()
+    selected_radiobutton = radio_var.get()
 
     print("Difficulty:", selected_difficulty)
-    print("Questions:", selected_questions)
+    print("Questions:", selected_radiobutton)
 
-# Main Window
-
-main_window = Tk()
-main_window.geometry("800x500")
-main_window.configure(background="#dfd5ed")
-main_window.title("Math Quiz App")
-
-
-# Number of Questions
-
+# Radio buttons - Number of Questions
 radio_var = tk.StringVar(value="5")
 
-radio_label = tk.Label(
-    main_window,
-    text="No. Of Questions:",
-    font=("Georgia", 10),
-    bg="#dfd5ed"
-)
-radio_label.grid(row=0, column=0, padx=10, pady=10)
+radio_label = tk.Label(main_window, font=("Georgia", 10), background='#dfd5ed', text="No. Of Questions:")
+radio_label.grid(row=25, column=0, padx=10, pady=10)
 
 radio1 = tk.Radiobutton(
     main_window,
@@ -45,7 +36,7 @@ radio1 = tk.Radiobutton(
     bg="#dfd5ed",
     font=("Georgia", 10)
 )
-radio1.grid(row=0, column=1)
+radio1.grid(row=25, column=1)
 
 radio2 = tk.Radiobutton(
     main_window,
@@ -55,7 +46,7 @@ radio2 = tk.Radiobutton(
     bg="#dfd5ed",
     font=("Georgia", 10)
 )
-radio2.grid(row=0, column=2)
+radio2.grid(row=25, column=2)
 
 radio3 = tk.Radiobutton(
     main_window,
@@ -65,45 +56,45 @@ radio3 = tk.Radiobutton(
     bg="#dfd5ed",
     font=("Georgia", 10)
 )
-radio3.grid(row=0, column=3)
+radio3.grid(row=25, column=3)
 
 # Difficulty Combobox
+difficulty = ["Basic", "Advanced", "Expert"]
 
-difficulty_levels = ["Basic", "Advanced", "Expert"]
+difficulty_label = tk.Label(main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Difficulty:")
+difficulty_label.grid(row=20, column=0, padx=10, pady=10)
 
-difficulty_label = tk.Label(
-    main_window,
-    text="Difficulty:",
-    font=("Georgia", 10),
-    fg="#3d354a",
-    bg="#dfd5ed"
-)
-difficulty_label.grid(row=1, column=0, padx=10, pady=10)
-
-combo_difficulty = ttk.Combobox(
-    main_window,
-    values=difficulty_levels,
-    width=15
-)
-combo_difficulty.grid(row=1, column=1, padx=10)
+combo_difficulty = ttk.Combobox(main_window, values=difficulty, width=15)
+combo_difficulty.grid(row=20, column=2, padx=10)
 combo_difficulty.current(0)
 
-# Save Button
 
-save_button = tk.Button(
-    main_window,
-    text="Save Selection",
-    command=save_selection
-)
-save_button.grid(row=2, column=0, columnspan=2, pady=20)
+#Quit
+quit_button = tk.Button(main_window, text="Quit", command = quit_app)
+quit_button.grid(row=30, column=2, columnspan=2, pady=20)
 
-# Quit Button
 
-quit_button = tk.Button(
-    main_window,
-    text="Quit",
-    command=quit_app
-)
-quit_button.grid(row=2, column=2, columnspan=2, pady=20)
+#Username
+Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Username").grid(column=0, row=1)
+entry_username = Entry(main_window, background="#e5dff0")
+entry_username.grid(column=1, row=1)
 
+
+#Age
+Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Age").grid(column=3, row=1)
+entry_age = Entry(main_window, background="#e5dff0")
+entry_age.grid(column=4, row=1)
+
+
+#Year
+Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Username").grid(column=6, row=1)
+entry_year_level = Entry(main_window, background="#e5dff0")
+entry_year_level.grid(column=7, row=1)
+
+
+
+# Main Window
+main_window.geometry("500x500")
+main_window.configure(background='#dfd5ed')
+main_window.title("Math Quiz App")
 main_window.mainloop()
