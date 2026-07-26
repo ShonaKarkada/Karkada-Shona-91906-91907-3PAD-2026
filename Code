@@ -1,100 +1,79 @@
-# Karkada, Shona - 91906 - 3PAD Assessment
+#Karkada, Shona - 91906 - 3PAD Assessment
 
-# Import tkinter - GUI
 from tkinter import *
 from tkinter import ttk
-import random
 import tkinter as tk
-from PIL import Image, ImageTk
 
 main_window = Tk()
 
 
-# Quit subroutine
+#Quit subroutine
 def quit_app():
     main_window.destroy()
 
 
-def save_selection():
-    selected_difficulty = combo_difficulty.get()
-    selected_radiobutton = radio_var.get()
-
-    print("Difficulty:", selected_difficulty)
-    print("Questions:", selected_radiobutton)
-
-# Radio buttons - Number of Questions
+#Create radio buttons to ask the user to specifiy the required number of questions
 radio_var = tk.StringVar(value="5")
 
-radio_label = tk.Label(main_window, font=("Georgia", 10), background='#dfd5ed', text="No. Of Questions:")
-radio_label.grid(row=25, column=0, padx=10, pady=10)
+#Prompt the user to enter the required details: username, age, and year_level
+#Username entry box
+Label(main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Username" ).grid(column=0, row=1, padx=5, pady=10)
 
-radio1 = tk.Radiobutton(
-    main_window,
-    text="5",
-    variable=radio_var,
-    value="5",
-    bg="#dfd5ed",
-    font=("Georgia", 10)
-)
-radio1.grid(row=25, column=1)
+entry_username = Entry(main_window, background="#e5dff0", width=16)
+entry_username.grid(column=1, row=1, padx=5)
 
-radio2 = tk.Radiobutton(
-    main_window,
-    text="10",
-    variable=radio_var,
-    value="10",
-    bg="#dfd5ed",
-    font=("Georgia", 10)
-)
-radio2.grid(row=25, column=2)
+#Age entry box
+Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Age" ).grid(column=2, row=1, padx=5)
 
-radio3 = tk.Radiobutton(
-    main_window,
-    text="15",
-    variable=radio_var,
-    value="15",
-    bg="#dfd5ed",
-    font=("Georgia", 10)
-)
-radio3.grid(row=25, column=3)
+entry_age = Entry(main_window, background="#e5dff0", width=6)
+entry_age.grid(column=3, row=1, padx=5)
 
-# Difficulty Combobox
+#Year Level entry box
+Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Year Level" ).grid(column=4, row=1, padx=5)
+
+entry_year_level = Entry(main_window, background="#e5dff0", width=10)
+entry_year_level.grid(column=5, row=1, padx=5)
+
+#Create a combobox that stores the user's difficulty option
 difficulty = ["Basic", "Advanced", "Expert"]
 
-difficulty_label = tk.Label(main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Difficulty:")
-difficulty_label.grid(row=20, column=0, padx=10, pady=10)
+difficulty_label = Label( main_window, font=("Georgia", 10), fg="#3d354a", bg="#dfd5ed", text="Difficulty:" )
+difficulty_label.grid(row=3, column=1, pady=15, sticky="w")
 
-combo_difficulty = ttk.Combobox(main_window, values=difficulty, width=15)
-combo_difficulty.grid(row=20, column=2, padx=10)
+combo_difficulty = ttk.Combobox( main_window, values=difficulty, width=15 )
+combo_difficulty.grid(row=3, column=2, sticky="w")
 combo_difficulty.current(0)
 
+#Radiobuttons, and label for number of questions entry
+radio_label = Label( main_window, font=("Georgia", 10), bg="#dfd5ed", text="No. Of Questions:" )
+radio_label.grid(row=5, column=1, pady=15, sticky="w")
 
-#Quit
-quit_button = tk.Button(main_window, text="Quit", command = quit_app)
-quit_button.grid(row=30, column=2, columnspan=2, pady=20)
+#Incorporate stickey = "w" to align the radio label to the left
 
+radio1 = Radiobutton( main_window, text="5", variable=radio_var, value="5", bg="#dfd5ed", font=("Georgia", 10) )
+radio1.grid(row=5, column=2)
 
-#Username
-Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Username").grid(column=0, row=1)
-entry_username = Entry(main_window, background="#e5dff0")
-entry_username.grid(column=1, row=1)
+radio2 = Radiobutton( main_window, text="10", variable=radio_var, value="10", bg="#dfd5ed", font=("Georgia", 10) )
+radio2.grid(row=5, column=3)
 
+radio3 = Radiobutton( main_window, text="15", variable=radio_var, value="15", bg="#dfd5ed", font=("Georgia", 10) )
+radio3.grid(row=5, column=4)
 
-#Age
-Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Age").grid(column=3, row=1)
-entry_age = Entry(main_window, background="#e5dff0")
-entry_age.grid(column=4, row=1)
+#Create the start, quit and view highscore buttons
+#Create the Quit button
+quit_button = Button( main_window, text="Quit", command=quit_app, width=12)
+quit_button.grid(row=7, column=1, pady=20)
 
+#Create the Start button
+start_button = Button( main_window, text="Start", width=13)
+start_button.grid(row=7, column=2, pady=20, sticky = "w")
+#Create the Highscore button
+highscore_button = Button(main_window, text="View Highscores", width=15)
+highscore_button.grid(row=7, column=3, pady=20, sticky = "e")
 
-#Year
-Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Username").grid(column=6, row=1)
-entry_year_level = Entry(main_window, background="#e5dff0")
-entry_year_level.grid(column=7, row=1)
-
-
-
-# Main Window
-main_window.geometry("500x500")
-main_window.configure(background='#dfd5ed')
+#Create the main window
+main_window.geometry("700x500")
+main_window.configure(background="#dfd5ed")
 main_window.title("Math Quiz App")
+
 main_window.mainloop()
