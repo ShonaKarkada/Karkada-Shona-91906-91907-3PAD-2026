@@ -11,12 +11,14 @@ main_window = Tk()
 
 logo = PhotoImage(file="img2.png")
 image_resized = logo.subsample(2,2)
-image_label = tk.Label(main_window, image=image_resized)
+image_label = Label(main_window, image=image_resized, bg="#dfd5ed")
+image_label.grid(row=0, column=0, columnspan=5, pady=15)
+
 
 #Quit subroutine
 def quit_app():
     main_window.destroy()
-
+    
 #Highscore text file
 HIGHSCORE_FILE = "Highscores.txt"
 
@@ -28,7 +30,7 @@ class Student:
         self.age = age
         self.year_level = year_level
         self.score = 0
-        self.level = 1
+        self.level = 1   
 #Create a function that adds a point to the overall score when a correct answer is entered
     def add_score(self):
         self.score += 1
@@ -133,9 +135,12 @@ def check_inputs():
         return
 
 #Combo Box Validation
-    if combo_difficulty.get() not in ["ADVANCED", "BASIC", "EXPERT"]:
+    if combo_difficulty.get() not in ["ADVANCED", "BASIC", "EXPERT",
+                                      "advanced", "basic", "expert",
+                                      "Advanced", "Basic", "Expert", ]:
         error_window("Please select a difficulty option.")
         return
+
 
 #Create Student Object
     global current_student
@@ -149,8 +154,6 @@ radio_var = tk.StringVar(value="5")
 #Prompt the user to enter the required details: username, age, and year level
 
 #Create labels for the entry boxes, and for the displayed welcome message
-image_label = Label(main_window, image=image_resized, bg="#dfd5ed")
-image_label.grid(row=0, column=0, columnspan=5, pady=10)
 
 Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=1, column=0, columnspan=5, pady=15)
 
