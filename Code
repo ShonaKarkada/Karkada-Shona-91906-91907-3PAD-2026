@@ -8,13 +8,12 @@ import random
 
 main_window = Tk()
 
-
 #Quit subroutine
 def quit_app():
     main_window.destroy()
 
 #Highscore text file
-HIGHSCORE_FILE = "highscores.txt"
+HIGHSCORE_FILE = "Highscores.txt"
 
 #Create the Student Class, to store student information and add to the score
 class Student:
@@ -29,7 +28,6 @@ class Student:
     def add_score(self):
         self.score += 1
 
-
 #Define the required functions
 
 #Define the error_window to be displayed when an incorrect input is identified
@@ -43,20 +41,20 @@ def error_window(message):
 
     Button(error, text="OK", command=error.destroy, width=10).pack()
 
-#Define the function to be carried out by the program, when the finish button is pressed
-def save_highscore(student):
+#Define the function to be carried out when the finish button is pressed
+def save_highscore(student): 
     with open(HIGHSCORE_FILE, "a") as file:
-        file.write(f"{student.username},{student.score}\n")
+        file.write(f"{student.username} - {student.score}\n")
 
 #Define the view_highscores button on the main window
 def view_highscores():
     highscore_window = tk.Toplevel(main_window)
-    highscore_window.title("Highscores")
+    highscore_window.title("Highscores Window")
     highscore_window.geometry("350x350")
     highscore_window.configure(bg="#dfd5ed")
 
 #Format the layout for the highscore window
-    Label(highscore_window, text="Highscores", font=("Georgia", 10 ), bg="#dfd5ed").pack(pady=10)
+    Label(highscore_window, text="HIGHSCORES", font=("Georgia", 10), bg="#cfc1e3").pack(pady=10)
 
     try:
 
@@ -88,14 +86,12 @@ def start_quiz():
     quiz_window.geometry("600x400")
     quiz_window.configure(bg="#dfd5ed")
 
-
-
 #Create and format all the labels for the question screen
-    Label(quiz_window, text=f"STUDENT: {current_student.username}",bg="#dfd5ed").grid(column = 1, row = 0)
-    Label( quiz_window, text=f"Age: {current_student.age}", bg="#dfd5ed").grid(column = 3, row = 0)
-    Label( quiz_window, text=f"Year Level: {current_student.year_level}", bg="#dfd5ed" ).grid(column =5, row = 0)
-    Label( quiz_window, text=f"Difficulty: {combo_difficulty.get()}", bg="#dfd5ed" ).grid(column = 7, row = 0)
-    Label( quiz_window, text=f"Questions: {radio_var.get()}", bg="#dfd5ed" ).grid(column = 1, row = 0)
+    Label(quiz_window, text=f"STUDENT: {current_student.username}",bg="#dfd5ed",font="bold").grid(column = 1, row = 0)
+    Label( quiz_window, text=f"AGE: {current_student.age}", bg="#dfd5ed").grid(column = 3, row = 0)
+    Label(quiz_window, text=f"YEAR LEVEL: {current_student.year_level}", bg="#dfd5ed" ).grid(column =5, row = 0)
+    Label(quiz_window, text=f"DIFFICULTY: {combo_difficulty.get()}", bg="#dfd5ed" ).grid(column = 7, row = 0)
+    Label( quiz_window, text=f"QUESTIONS: {radio_var.get()}", bg="#dfd5ed" ).grid(column = 1, row = 0)
     Label( quiz_window, text="\nQuestion", font=("Georgia", 12), bg="#dfd5ed" ).grid(column = 7, row = 6)
     Button( quiz_window, text="Finish", width=15, command=lambda: save_highscore(current_student) ).grid(column = 7, row = 10)
 
@@ -106,21 +102,18 @@ def check_inputs():
     year_level = entry_year_level.get().strip()
 
 #Username Validation
-
     if username == "":
         error_window("Username cannot be blank.")
         return
 
-    if not username.isalpha():
+    if not username.replace(" ", "").isalpha():
         error_window("Username must contain letters only.")
         return
 
 #Age Validation
-    if age == "":
-        error_window("Age cannot be blank.")
-        return
+    
     if not age.isdigit():
-        error_window("Input must contain digits only.")
+        error_window("Age must be numeric.")
         return
     age = int(age)
     if age < 0 or age > 120:
@@ -128,22 +121,19 @@ def check_inputs():
         return
 
 #Year Level Validation
-    if year_level == "":
-        error_window("Year level cannot be blank.")
-        return
     if not year_level.isdigit():
-        error_window("Year level must contain digits only.")
+        error_window("Year level must be numeric.")
         return
     year_level = int(year_level)
     if year_level < 1 or year_level > 13:
-        error_window("Year level must be between 1 - 13.")
+        error_window("Year level must be between 1 and 13.")
         return
 
 #Create Student Object
     global current_student
-    current_student = Student( username, age, year_level)
+    
+    current_student = Student( username, age, year_level )
     start_quiz()
-
 
 #Create radio buttons to ask the user to specifiy the required number of questions
 radio_var = tk.StringVar(value="5")
@@ -151,7 +141,9 @@ radio_var = tk.StringVar(value="5")
 #Prompt the user to enter the required details: username, age, and year_level
 
 #Create labels for the entry boxes, and for the displayed welcome message
-Label(main_window,text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
+Label(
+    main_window,
+    text="  WELCOME TO THE MATHS QUIZ APP!  ", font=("Georgia", 10, "bold"), bg="#cfc1e3" ).grid(row=0, column=0, columnspan=5, pady=15)
 
 Label( main_window, text="  USERNAME:  ", font=("Georgia", 10), bg="#cfc1e3" ).grid(row=1, column=0, padx=10, pady=10)
 
@@ -172,17 +164,15 @@ entry_year_level.grid(row=1, column=4, padx=10)
 difficulty = ["BASIC", "ADVANCED", "EXPERT"]
 
 difficulty_label = Label(main_window, font=("Georgia", 10), bg="#cfc1e3", text="  DIFFICULTY:  " )
-difficulty_label.grid(row=5, column=1, pady=15)
+difficulty_label.grid(row=5, column=0, pady=15, columnspan = 2)
 
-combo_difficulty = ttk.Combobox( main_window, values=difficulty, width=15 )
-combo_difficulty.set("Select Option")
-
+combo_difficulty = ttk.Combobox( main_window, values= difficulty, width=15)
 combo_difficulty.grid(row=5, column=3, sticky="w")
 combo_difficulty.current(0)
 
 #Radiobuttons, and label for number of questions entry
 radio_label = Label( main_window, bg="#cfc1e3", font=("Georgia", 10), text="  NO. OF QUESTIONS:  " )
-radio_label.grid(row=3, column=1, pady=15, sticky="w")
+radio_label.grid(row=3, column=0, pady=15, columnspan=2,)
 
 #Create the radiobuttons 
 
