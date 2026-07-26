@@ -1,1 +1,46 @@
+#Karkada, Shona - 91906 - 3PAD Assessment
+
+#Import tkinter - GUI
+from tkinter import *
+from tkinter import ttk
+import random
+import tkinter as tk
+from PIL import Image, ImageTk
+
+
+#Quit subroutine
+def quit():
+    main_window.destroy()
+
+main_window = Tk()
+
+def save_selection():
+    selected_option = dropdown_var.get()
+    selected_radiobutton = radio_var.get()
+
+radio_var = tk.StringVar(value="None")
+radio_label = tk.Label(main_window,  font=("Georgia 10 "), background='#dfd5ed', text="No. Of Questions: ").grid(column=1, row=60)
+radio1 = tk.Radiobutton(main_window, font=("Georgia 10 "), text="5", background='#dfd5ed', variable=radio_var, value="5").grid(column=3, row=60)
+radio2 = tk.Radiobutton(main_window, font=("Georgia 10 "), text="10", background='#dfd5ed', variable=radio_var, value="10").grid(column=5, row=60)
+radio3 = tk.Radiobutton(main_window, font=("Georgia 10 "), text="15", background='#dfd5ed', variable=radio_var, value="15").grid(column=9, row=60)
+
+
+difficulty = {
+    "Basic": 1,
+    "Advanced": 2,
+    "Expert": 3,
+}
+
+
+
+Label(main_window, font=("Georgia 10 "), fg = "#3d354a", bg="#dfd5ed", text="Difficulty: ").grid(column=0, row=70)
+combo_difficulty = ttk.Combobox(main_window, values=list(difficulty.keys()), width=17)
+combo_difficulty.grid(column=3, row=70)
+combo_difficulty.bind("<<ComboboxSelected>>")
+difficulty = combo_difficulty.get()
+
+main_window.geometry("800x500")
+main_window.configure(background='#dfd5ed')
+main_window.title("Math Quiz App")
+main_window.mainloop()
 
