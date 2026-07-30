@@ -55,9 +55,21 @@ questions = [
 },
 {
     "difficulty":"BASIC",
+    "question":" What is 2/4 equivalent to ___",
+    "choices":["6/9","14/7","1/2","100/10"],
+    "answer":"1/2"
+},
+{
+    "difficulty":"BASIC",
     "question":" 6 + 8 = ___",
     "choices":["12","13","14","15"],
     "answer":"14"
+},
+{
+    "difficulty":"BASIC",
+    "question":" 2x + x = ___",
+    "choices":["2x²","2x","3x","x"],
+    "answer":"3x"
 },
 {
     "difficulty":"BASIC",
@@ -218,6 +230,12 @@ questions = [
     "question":" 25² = ___",
     "choices":["525","575","625","675"],
     "answer":"625"
+},
+{
+    "difficulty":"ADVANCED",
+    "question":" 2x x x = ___",
+    "choices":["2x²","2x","3x","x"],
+    "answer":"2x²"
 },
 {
     "difficulty":"ADVANCED",
@@ -470,6 +488,7 @@ def view_highscores():
                     scores.append((username, int(score)))
 
         scores.sort(key=lambda x: x[1], reverse=True)
+
         if len(scores) > 0:
             #Create the table layout
             Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg="#c7bad6", font=("Georgia", 8,)).grid(row=1, column=1, padx=3,)
@@ -487,13 +506,19 @@ def view_highscores():
 
                 Label(highscore_window, text=score, bg="#d6cee0" ).grid(row=rank + 1, column=3)
 
+            button_row = 8
+
         else:
-                Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#d6cee0").grid(row=7, column=4, sticky = "e", padx = 3, columnspan=3)
+                Label( highscore_window, text="No highscores yet", font=("Georgia", 9), bg="#d6cee0").grid(row=2, column=1, columnspan=3, pady=20)
+
+            button_row = 3        
 
     except FileNotFoundError:
-        Label( highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#d6cee0").grid(row=7, column=4, padx=3, columnspan=3)
+        Label(highscore_window, text="No highscores found.", font=("Georgia", 9), bg="#d6cee0").grid(row=2, column=1, columnspan=3, pady=20)
 
-    Button( highscore_window, text="CLOSE", font=("Georgia", 8), command=highscore_window.destroy,width=12 ).grid(row=8, column=1, columnspan=3, pady=25)
+        button_row = 3
+    
+    Button(highscore_window, text="CLOSE", font=("Georgia", 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=1, columnspan=3, pady=20)
         
 def start_quiz():
 #Create the quiz window
@@ -593,6 +618,7 @@ def start_quiz():
         current_student.next_question()
 
         if current_student.current_question >= len(current_student.quiz_questions):
+            save_highscore(current_student)
             quiz_window.destroy()    
             return
 
@@ -694,7 +720,7 @@ question_label = Label( main_window, text="  NO. OF QUESTIONS:  ", font=("Georgi
 question_label.grid(row=4, column=0, columnspan=2, pady=15)
 
 # Number of Questions Slider - allow the user to specify between 5 to 15 questions
-question_slider = tk.Scale(main_window, from_=5, to=15, resolution=5, orient="horizontal", length=115, showvalue=False, variable=question_var, bg="#dfd5ed",highlightthickness=0)
+question_slider = tk.Scale(main_window, from_=5, to=15, resolution=5, orient="horizontal", length=115, showvalue=True, variable=question_var, bg="#d6cee0",highlightthickness=0)
 question_slider.grid(row=4, column=3, columnspan=2, sticky="w")
 
 #Create the start, quit and view highscore buttons
