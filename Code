@@ -110,7 +110,7 @@ def view_highscores():
 
             Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8,) ).grid(row=1, column=2, padx=3,  )
 
-            Label(highscore_window, text="SCORE", width=10, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8) ).grid(row=1, column=3, padx=3, )
+            Label(highscore_window, text="RESULT", width=10, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8) ).grid(row=1, column=3, padx=3, )
 
             #Prompt the program to only display the user's top 5 scores, in order
             for rank, (username, score) in enumerate(scores[:TOP_SCORES], start=1):
