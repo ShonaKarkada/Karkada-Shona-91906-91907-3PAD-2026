@@ -68,7 +68,7 @@ class Student:
 def error_window(message):
     error = tk.Toplevel(main_window)
     error.title("Input Error")
-    error.geometry("300x120")
+    error.geometry("300x150")
     error.configure(bg=BACKGROUND)
 
     Label(error, text=message, fg = "red", bg=BACKGROUND, font= (FONT, 10)).pack(pady=20)
@@ -87,8 +87,6 @@ def view_highscores():
     highscore_window.geometry("312x320")
     highscore_window.configure(bg=BACKGROUND)
 
-    Label(highscore_window, text="   HIGHSCORES   ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
-
 #Prompt the program to retrieve the required information from the text file
     try:
         scores = []
@@ -105,6 +103,8 @@ def view_highscores():
         scores.sort(key=lambda x: x[1], reverse=True)
 
         if len(scores) > 0:
+            Label(highscore_window, text="   HIGHSCORES   ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
+
             #Create the table layout
             Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg=HEADER, font=(FONT, 8,)).grid(row=1, column=1, padx=3,)
 
@@ -122,22 +122,27 @@ def view_highscores():
                 Label(highscore_window, text=score, bg=BACKGROUND ).grid(row=rank + 1, column=3)
 
             button_row = 8
+            Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=1, columnspan=3, pady=20)
 
         else:
-                Label( highscore_window, text="No highscores yet", font=(FONT, 9), bg=BACKGROUND, anchor="center", justify="center").grid(row=2, column=1, columnspan=3, pady=20, sticky="e")
+                Label(highscore_window, text="                                       HIGHSCORES                                       ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
+
+                Label( highscore_window, text="No highscores yet...", font=(FONT, 9), bg=BACKGROUND, anchor="center", justify="center").grid(row=2, column=2, columnspan=3, pady=20, sticky="w")
 
                 button_row = 3        
+                Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=2, columnspan=3, pady=20, sticky = "w")
 
     except FileNotFoundError:
+        Label(highscore_window, text="                                       HIGHSCORES                                       ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
+
         Label(highscore_window, text="No highscores found.", font=(FONT, 9), bg=BACKGROUND, anchor="center",
-    justify="center").grid(row=2, column=1, columnspan=3, pady=20, sticky="ew")
+    justify="center").grid(row=2, column=1, columnspan=3, pady=20, sticky="w")
 
         button_row = 3
     
-    Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=1, columnspan=3, pady=20)
+        Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=2, columnspan=3, pady=20, sticky = "w")
         
 def start_quiz():
-    main_window.withdraw()
 #Create the quiz window
     quiz_window = tk.Toplevel(main_window)
     quiz_window.title("Question Screen")
@@ -256,7 +261,7 @@ def start_quiz():
 
         if answer:
             quiz_window.destroy()
-            main_window.deiconify()
+            
         
     
 
@@ -309,7 +314,6 @@ def results_window():
 
         else:
             results.destroy()
-            main_window.deiconify()
             return
 
         results.destroy()
@@ -330,7 +334,7 @@ def results_window():
         Button(results, text="Next Level", font=(FONT, 10), width=15, bg="#bfb9c7", command=next_level ).pack(side="right", padx=20, pady=20)
 
     else:
-        Button(results, text="Finish", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy(), main_window.deiconify()) ).pack(side="right", padx=20, pady=20)
+        Button(results, text="Finish", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy()) ).pack(side="right", padx=20, pady=20)
     
 
 
