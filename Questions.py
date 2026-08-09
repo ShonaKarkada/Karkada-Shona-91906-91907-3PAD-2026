@@ -1,8 +1,11 @@
-#Create questions for the question screen, in the main program - this allows for more robustness, and efficiency when adding questions to the code
+# Purpouse - Store the questions that are to be displayed on the question screen, in the main program - this allows for more robustness, and efficiency when adding questions to the code.
 
+# The main program is in a separate file for increased organisation, maintainability, and robustness, allowing for easy modifications or additions to the set of questions.
+
+# Create a nested dictionary to store all the questions in an efficent way.
 questions = [
 
-#Create the Basic Questions
+# Add the questions that will be displayed for the Basic level - this is the easiest level of questions available.
 
 {
     "difficulty":"BASIC",
@@ -15,6 +18,12 @@ questions = [
     "question":" 2/4 equivalent to ___ ",
     "choices":["6/9","14/7","1/2","100/10"],
     "answer":"1/2"
+},
+{
+    "difficulty":"BASIC",
+    "question":"Area of a rectangle with l = 6 cm and w = 4 cm = ___",
+    "choices":["10 cm²","20 cm²","24 cm²","30 cm²"],
+    "answer":"24 cm²"
 },
 {
     "difficulty":"BASIC",
@@ -153,16 +162,16 @@ questions = [
     "answer":"24"
 },{
     "difficulty":"BASIC",
-    "question":" 4+7 = ___ ",
+    "question":" 4 + 7 = ___ ",
     "choices":["11","28","3","-3"],
     "answer":"11"
 },{
     "difficulty":"BASIC",
-    "question":" 3x6 = ___ ",
+    "question":" 3 x 6 = ___ ",
     "choices":["18","21","9","-18"],
     "answer":"18"
 },
-#Add Advanced Questions - slightly harder than the basic question set
+# Add questions for the Advanced difficulty level - slightly harder than the basic question set, and moderately challenging.
 
 {
     "difficulty":"ADVANCED",
@@ -190,7 +199,7 @@ questions = [
 },
 {
     "difficulty":"ADVANCED",
-    "question":" 2x x x = ___ ",
+    "question":" 2x × x = ___ ",
     "choices":["2x²","2x","3x","x"],
     "answer":"2x²"
 },
@@ -286,7 +295,7 @@ questions = [
     "answer":"289"
 },
 
-#Create the Expert Questions - most challenging level
+# Create the Expert questions - the final and most challenging difficulty level.
 {
     "difficulty":"EXPERT",
     "question":"√144 = ___ ",
