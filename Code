@@ -1,6 +1,6 @@
 # Author - Shona Karkada
-# Purpouse - 91906 - 3PAD Assessment
-# Date -6/08/2026
+# Purpose - 91906 - 3PAD Assessment
+# Date - 6/08/2026
 
 # Import tkinter, and all other required imports.
 from tkinter import *
@@ -71,123 +71,118 @@ class Question:
         self.difficulty = difficulty
 
 
-# Define the main window as Tk().
-main_window = Tk()
+# Define a main function, that contains the main part/flow of the code, to improve the overall structure and flow of the code.
+def main():
 
-# Add and format the image, using the PIL Image import, to add the logo to the main menu.
-image = Image.open("img3.png")
-image = image.resize((150, 150))  
-image_resized = ImageTk.PhotoImage(image)
+    # Define the main window as Tk().
+    main_window = Tk()
 
-image_label = Label(main_window, image=image_resized, bg=BACKGROUND)
+    # Add and format the image, using the PIL Image import, to add the logo to the main menu, to incorporate a non-core API, library.
+    image = Image.open("img3.png")
+    image = image.resize((150, 150))  
+    image_resized = ImageTk.PhotoImage(image)
+    image_label = Label(main_window, image=image_resized, bg=BACKGROUND)
+    image_label.grid(row = 0, column = 0, columnspan = 5, pady=15)
 
+    # Define the required functions to be carried out in the program, and the windows for each function.
 
-# Define the required functions to be carried out in the program, and the windows for each function.
+    # Define the function to be run, when the user quits the subroutine, and include a confirmation message box, to avoid losing progress.
+    def quit_app():
+        answer = messagebox.askyesno("Quit", "Are you sure you want to quit?")
 
-# Define the function to be run, when the user quits the subroutine, and include a confirmation message box, to avoid losing progress.
-def quit_app():
-    answer = messagebox.askyesno("Quit", "Are you sure you want to quit?")
+        if answer:
+            main_window.destroy()
+        
 
-    if answer:
-        main_window.destroy()
-    
+    # Define and format the error_window to be displayed when an invalid input is entered, for validation checks.
+    def error_window(message):
+        error = tk.Toplevel(main_window)
+        error.title("Input Error")
+        error.geometry("300x150")
+        error.configure(bg=BACKGROUND)
 
-# Define and format the error_window to be displayed when an invalid input is entered, for validation checks.
-def error_window(message):
-    error = tk.Toplevel(main_window)
-    error.title("Input Error")
-    error.geometry("300x150")
-    error.configure(bg=BACKGROUND)
+        Label(error, text=message, fg = "red", bg=BACKGROUND, font= (FONT, 10)).pack(pady=20)
 
-    Label(error, text=message, fg = "red", bg=BACKGROUND, font= (FONT, 10)).pack(pady=20)
+        # Create a close button, so that the user is able to close the error window.
+        Button(error, text="OK", command=error.destroy, width=10).pack()
 
-    # Create a close button, so that the user is able to close the error window.
-    Button(error, text="OK", command=error.destroy, width=10).pack()
+    # Define the function to be carried out, and information to be saved, when the program is prompted to save a hgih score, so that all scores are written to the persistant storage/text file.
+    def save_highscore(student):
+        with open(HIGHSCORE_FILE, "a") as file:
+            file.write(f"{student.username},{combo_difficulty.get()},{student.score}\n")
 
-# Define the function to be carried out, and information to be saved, when the program is prompted to save a hgih score, so that all scores are accurately written to the persistant storage/text file.
-def save_highscore(student):
-    with open(HIGHSCORE_FILE, "a") as file:
-        file.write(f"{student.username},{combo_difficulty.get()},{student.score}\n")
-
-# Define the procedure for when the user clears the displayed highscores, and ensure that the text file is cleared, after confirmation, and that a statement is shown to inform the user.
-def clear_highscores(highscore_window):
-    answer = messagebox.askyesno(
-        "Clear Highscores",
-        "Are you sure you want to delete all highscores?"
-    )
-
-    if answer:
-        with open(HIGHSCORE_FILE, "w") as file:
-            file.write("")
-
-        messagebox.showinfo(
-            "Highscores",
-            "All highscores have been deleted."
+    # Define the procedure for when the user clears the displayed highscores, and ensure that the text file is cleared, after confirmation, and that a statement is shown to inform the user.
+    def clear_highscores(highscore_window):
+        answer = messagebox.askyesno(
+            "Clear Highscores",
+            "Are you sure you want to delete all highscores?"
         )
 
-        # Refresh the highscores window - should now show the default window when no highscores are available to be displayed.
-        highscore_window.destroy()
-        view_highscores()
-        
-# Define the view_highscores window and function of the button on the main window, in order to allow the user to access their scores.
-def view_highscores():
-    highscore_window = tk.Toplevel(main_window)
-    highscore_window.title("Highscores Window")
-    highscore_window.geometry("312x320")
-    highscore_window.configure(bg=BACKGROUND)
+        if answer:
+            with open(HIGHSCORE_FILE, "w") as file:
+                file.write("")
 
-# Prompt the program to retrieve the required information from the text file, so that it can be displayed in the highscores window.
-    try:
-        # Define an empty list for the scores to be added into.
-        scores = []
+            messagebox.showinfo( "Highscores", "All highscores have been deleted." )
 
-        # Open the file in read-only format, so that information can be retrieved.
-        with open(HIGHSCORE_FILE, "r") as file:
+            # Refresh the highscores window - should now show the default window when no highscores are available to be displayed.
+            highscore_window.destroy()
+            view_highscores()
+            
+    # Define the view_highscores window and function of the button on the main window, to allow the user to access their scores.
+    def view_highscores():
+        highscore_window = tk.Toplevel(main_window)
+        highscore_window.title("Highscores Window")
+        highscore_window.geometry("312x320")
+        highscore_window.configure(bg=BACKGROUND)
 
-            # Removes all unnecessary white spaces or trailing spaces so that just the required information is extracted.
-            for line in file:
-                line = line.strip()
+        # Prompt the program to retrieve the required information from the text file, so that it can be displayed in the highscores window.
+        try:
+            # Create an empty list, to store the highscores in.
+            scores = []
+            # Open the file in read-only format.
+            with open(HIGHSCORE_FILE, "r") as file:
+                # Removes all unnecessary white spaces or trailing spaces so that just the required information is extracted.
+                for line in file:
+                    line = line.strip()
+                    # Specify that the program only takes information if the line is not empty, and split the line wherever a comma is present so that each individual piece of information is stored correctly.
+                    if line != "":
+                        username, level, score = line.split(",")
+                        scores.append((username, level, int(score)))
+            # Ensures that the program sorts the scores in descending order, using the score value.
+            scores.sort(key=lambda x: x[2], reverse=True)
 
-                # Specify that the program only takes information if the line is not empty, and split the line wherever a comma is present so that each individual piece of information is stored correctly.
-                if line != "":
-                    username, level, score = line.split(",")
-                    # Append the information, and convert the score value to an integer.
-                    scores.append((username, level, int(score)))
+            # This specifies what should be displayed, when there are scores saved in the file, so that the highscore window is created to display them.
+            if len(scores) > 0:
+                Label(highscore_window, text="   HIGHSCORES   ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
 
-        # Ensures that the program sorts the scores in descending order, using the score value.
-        scores.sort(key=lambda x: x[2], reverse=True)
+                # Create the table layout, and headers: Rank, Username, & Result, so that each row and column appropriately fits the scores/information.
+                Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg=HEADER, font=(FONT, 8,)).grid(row=1, column=1, padx=3,)
 
-        # This specifies what should be displayed, when there are scores saved in the file, so that the highscore window is created to display them.
-        if len(scores) > 0:
-            Label(highscore_window, text="   HIGHSCORES   ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
+                Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8,) ).grid(row=1, column=2, padx=3,  )
 
-            # Create the table layout, and headers: Rank, Username, & Result, so that each row and column appropriately fits the scores/information.
-            Label(highscore_window, text="RANK", width=10, borderwidth=0.5,  relief="solid", bg=HEADER, font=(FONT, 8,)).grid(row=1, column=1, padx=3,)
+                Label(highscore_window, text="RESULT", width=10, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8) ).grid(row=1, column=3, padx=3, )
 
-            Label(highscore_window, text="USERNAME", width=20, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8,) ).grid(row=1, column=2, padx=3,  )
+                # Prompt the program to only display the user's top 5 scores, in order, to restrict the amount of scores displayed.
+                for rank, (username, level, score) in enumerate(scores[:TOP_SCORES], start=1):
 
-            Label(highscore_window, text="RESULT", width=10, borderwidth=0.5, relief="solid", bg=HEADER, font=(FONT, 8) ).grid(row=1, column=3, padx=3, )
+                    # Define how the rows are to be created, under each header, and what must be displayed, so that the program is able to properly display the information in its row.
 
-            # Prompt the program to only display the user's top 5 scores, in order, to restrict the amount of scores displayed.
-            for rank, (username, level, score) in enumerate(scores[:TOP_SCORES], start=1):
+                    Label(highscore_window, text=rank, bg=BACKGROUND ).grid(row=rank + 1, column=1)
 
-                # Define how the rows are to be created, under each header, and what must be displayed, so that the program is able to properly display the information in its row.
-                Label(highscore_window, text=rank, bg=BACKGROUND ).grid(row=rank + 1, column=1)
+                    Label(highscore_window, text=username.capitalize(), bg=BACKGROUND ).grid(row=rank + 1, column=2)
 
-                Label(highscore_window, text=username.capitalize(), bg=BACKGROUND ).grid(row=rank + 1, column=2)
+                    Label( highscore_window, text=f"{level} - {score}", bg=BACKGROUND ).grid(row=rank + 1, column=3)
 
-                Label( highscore_window, text=f"{level} - {score}", bg=BACKGROUND ).grid(row=rank + 1, column=3)
+                # Create a variable for the row the button should be displayed on, for robustness, so that it can later be adjusted.    
+                button_row = 8
+                # Create the close button, to allow the user to exit the highscore window.
+                Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=1, columnspan=3, pady=20)
 
-            # Create a variable for the row the button should be displayed on, for robustness, so that it can later be adjusted.    
-            button_row = 8
-            # Create the close button, to allow the user to exit the highscore window.
-            Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=1, columnspan=3, pady=20)
+                # Create the clear highscores button, to allow the user to clear all the information and highscores that have been saved from the text file.
+                Button( highscore_window, text="CLEAR HIGHSCORES", font=(FONT, 8), command=lambda: clear_highscores(highscore_window), width=18, bg="#bfb9c7" ).grid(row=button_row + 1, column=1, columnspan=3, pady=5)
 
-            # Create the clear highscores button, to allow the user to clear all the information and highscores that have been saved from the text file.
-            Button( highscore_window, text="CLEAR HIGHSCORES", font=(FONT, 8), command=lambda: clear_highscores(highscore_window), width=18, bg="#bfb9c7" ).grid(row=button_row + 1, column=1, columnspan=3, pady=5)
-
-        # Define the function for when no highscores are found in the text file, so that a blank window is not displayed.
-        else:
+            # Define the function for when no highscores are found in the text file, so that a blank window is not displayed.
+            else:
                 Label(highscore_window, text="                                       HIGHSCORES                                       ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
 
                 # Specify what the program must display, in order to inform the user.
@@ -197,372 +192,374 @@ def view_highscores():
                 button_row = 3        
                 Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=2, columnspan=3, pady=20, sticky = "w")
 
-    # Define what must be done, in the case where the file is not found, to prevent the program from crashing.
-    except FileNotFoundError:
-        Label(highscore_window, text="                                       HIGHSCORES                                       ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
-        # Ensure the program prints a label, to inform the user, and that the window is formatted properly.
-        Label(highscore_window, text="No highscores found.", font=(FONT, 9), bg=BACKGROUND, anchor="center",
-    justify="center").grid(row=2, column=1, columnspan=3, pady=20, sticky="w")
+        # Define what must be done, in the case where the file is not found, to prevent the program from crashing.
+        except FileNotFoundError:
+            Label(highscore_window, text="                                       HIGHSCORES                                       ", font=(FONT, 10),bg=HEADER ).grid(row=0, column=1, columnspan=3, pady=10)
+            # Ensure the program prints a label, to inform the user, and that the window is formatted properly.
+            Label(highscore_window, text="No highscores found.", font=(FONT, 9), bg=BACKGROUND, anchor="center", justify="center").grid(row=2, column=1, columnspan=3, pady=20, sticky="w")
 
-        button_row= 3
-        # Prompt the program to display the close button, so that the user is able to exit the window.
-        Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=2, columnspan=3, pady=20, sticky = "w")
+            button_row= 3
+            # Prompt the program to display the close button, so that the user is able to exit the window.
+            Button(highscore_window, text="CLOSE", font=(FONT, 8), command=highscore_window.destroy, width=12).grid(row=button_row, column=2, columnspan=3, pady=20, sticky = "w")
 
-# Define the function to be run, when the program is prompted to start the quiz, once the start button is pressed.     
-def start_quiz():
+    # Define the function to be run, when the program is prompted to start the quiz, once the start button is pressed.             
+    def start_quiz():
 
-    # Create and format the quiz window, to an appropriate size, so that all the elements fit.
-    quiz_window = tk.Toplevel(main_window)
-    quiz_window.title("Question Screen")
-    quiz_window.geometry("600x400")
-    quiz_window.configure(bg=BACKGROUND)
+        # Create and format the quiz window, to an appropriate size, so that all the elements fit.
+        quiz_window = tk.Toplevel(main_window)
+        quiz_window.title("Question Screen")
+        quiz_window.geometry("600x400")
+        quiz_window.configure(bg=BACKGROUND)
 
-    # Prompt the program to identify the difficulty and number of questions chosen, and only provide questions based on the specified information.
-    difficulty = combo_difficulty.get()
-    number_questions = question_var.get()
+        # Prompt the program to identify the difficulty and number of questions chosen, and only provide questions based on the specified information.
+        difficulty = combo_difficulty.get()
+        number_questions = question_var.get()
 
-    available_questions = []
-    # Define the format in which the information/questions must be extracted from the questions file: questions.py.
-    for question in questions:
-        if question["difficulty"] == difficulty:
-            available_questions.append(
-                Question(
-                    question["question"],
-                    question["choices"],
-                    question["answer"],
-                    question["difficulty"]
+        available_questions = []
+
+        # Define the format in which the information/questions must be extracted from the questions file: questions.py.
+        for question in questions:
+            if question["difficulty"] == difficulty:
+                available_questions.append(
+                    Question(
+                        question["question"],
+                        question["choices"],
+                        question["answer"],
+                        question["difficulty"]
+                    )
                 )
-            )
-    # Prompt the program to randomise the questions before displaying them, so that the same order isn't used each time - else allowing the user to retry the level wouldn't be practical.
-    random.shuffle(available_questions)
-
-    # Prompts the program to give the current student the selected number of questions from the available questions, and allows the user to start from the first questions.
-    current_student.quiz_questions = available_questions[:number_questions]
-    current_student.current_question = 0
-
-    # Capitalises the student's username, so that it can be displayed neatly in the quiz window.
-    uppercase_username = current_student.username.upper()
-
-    # Deine how the Student information should be formatted, so that it can be displayed in the quiz window for each session.
-    Label( quiz_window, text =f"       STUDENT: {uppercase_username}    AGE: {current_student.age}    YEAR LEVEL: {current_student.year_level}    DIFFICULTY: {difficulty}", font=(FONT, 8), bg=BACKGROUND ).grid(row=1, column=0, columnspan=4, pady=10)
-
-    # Create and format an empty label, so that the program is able to display the updated question number, using q.question, each time.
-    question_number = Label( quiz_window, text="", font=(FONT, 10), bg=BACKGROUND)
-    question_number.grid(row=1, column=4)
-
-    # Create and format an empty label, so that the program is able to display the exact question for the user.
-    question_label = Label( quiz_window, text="", font=( FONT, 14), bg=BACKGROUND )
-    question_label.grid(row=2, column=3, sticky = "w", columnspan=4, pady=20)
-
-
-    # Create a variable StringVar to store the user's selected answer
-    answer_var = StringVar()
-
-    # Create radiobuttons to allow the user to select an answer from 4 options. This multichoice method prevents additonal validation checks for the answer entry box, and keeps the code more concise, robust and flexible.
-
-    # Format the radio buttons, so that the layout is aesthetically pleasing and user friendly, and call the answer_var variable that was created so that the four options are displayed in the radio buttons.
-    radio1 = Radiobutton(quiz_window, text="", variable=answer_var, value = "1", bg=BACKGROUND)
-    radio1.grid(row=3, column=3, sticky="w", padx=40)
-
-    radio2 = Radiobutton(quiz_window, text="", variable=answer_var, value = "2", bg=BACKGROUND)
-    radio2.grid(row=4, column=3, sticky="w", padx=40)
-
-    radio3 = Radiobutton(quiz_window, text="", variable=answer_var, value = "3", bg=BACKGROUND)
-    radio3.grid(row=5, column=3, sticky="w", padx=40)
-
-    radio4 = Radiobutton(quiz_window, text="", variable=answer_var, value = "4", bg=BACKGROUND)
-    radio4.grid(row= 6, column=3, sticky ="w", padx=40)
-
-    # Define the show_question function, so that the program displays the current question for the user.
-    def show_question():
-        # Create a variable, q, to store the current question from the student's set of quiz questions.
-        q = current_student.quiz_questions[current_student.current_question]
-
-        # Update the question number to show the user's current progress, using the question_number label that was created.    
-        question_number.config( text=f"              Question {current_student.current_question + 1} of {len (current_student.quiz_questions)}" )
-
-        # Display the current questions for the user, using the question_label that was created.
-        question_label.config(text=q.question)
-
-        # Update the four radio buttons to accurately show the user's current answer choices.
-        radio1.config(text=q.choices[0], value=q.choices[0])
-        radio2.config(text=q.choices[1], value=q.choices[1])
-        radio3.config(text=q.choices[2], value=q.choices[2])
-        radio4.config(text=q.choices[3], value=q.choices[3])
-        
-        # Reset the selected answer, so that none of the radio button options are selected for the new question.
-        answer_var.set("NONE")
-
-    # Create a feedback message popup that displays after each question is submitted, to inform the user of if their answer was right or wrong.
-    def feedback_popup(message):
-        # Format the window, so that it displays properly.
-        popup = tk.Toplevel(quiz_window)
-        popup.title("Feedback")
-        popup.geometry("250x100")
-        popup.configure(bg=BACKGROUND)
-
-        # Create a label to display the message in the popup window.
-        Label( popup, text=message, font=(FONT, 11), bg=BACKGROUND ).pack(expand=True)
-
-        # Prompt the program to automatically destory the popup window after the defined time period in ms.
-        popup.after(2000, popup.destroy)
-
-    # Define the action, for when the continue_question function is called.
-    def continue_question():
-        # Allow the user to be moved on to the next question.
-        current_student.next_question()
-
-        # If the student has completed all quesstions, the program should save their score, destroy the quiz window, and open the results window, to provide their overall performance and feedback.
-        if current_student.current_question >= len(current_student.quiz_questions):
-            save_highscore(current_student)
+        # Prompt the program to randomise the questions before displaying them, so that the same order isn't used each time - else allowing the user to retry the level wouldn't be practical.
+        random.shuffle(available_questions)
+        # Create a validation check, incase there aren't enough questions to satisfy the selected amount.
+        if len(available_questions) == 0:
             quiz_window.destroy()
-            results_window()
+            error_window("No questions are available for this difficulty.")
             return
-        # If the student has not completed their question set, display the next question.
-        show_question()
 
-    # Define the process that must be carried out when the Next button is pressed.
-    def next_question():
-        # If the user has not answered, the program will display an error window until an option is selected, or the question is skipped.
-        if answer_var.get() == "NONE":
-            error_window("Please select an answer or press Skip.")
-            return
-        # Create a variable q, to store the current question for the student.
-        q = current_student.quiz_questions[current_student.current_question]
-
-        # Display the message to be displayed if the answer is right or wrong, and prompt the program to automatically destroy the window after the defined amount of time.
-        if answer_var.get() == q.answer:
-            current_student.add_score()
-            feedback_popup("✓ Correct!")
-        else:
-            feedback_popup(f"✗ Incorrect!\nCorrect answer: {q.answer}")
-
-        quiz_window.after(2000, continue_question)
-    # Show the next question, for the user, after showing if the answer was right or wrong.
-    show_question()
-
-    # Create and format the next button, so that the user is able to move on to the next question, after completing a question.
-    Button(quiz_window, text="NEXT", font=(FONT, 10), width=15, background="#bfb9c7", command=next_question ).grid(row=8, column=3, sticky = "w", pady=30)
-
-    # Define what must happen when the user skips a question.
-    def skip_question():
-        # This moves the student onto the next question for the question set without recording an answer.
-        current_student.next_question()
-        # If the question skipped was the last question from the set the program should save the score, destroy the quiz window, and show the result window.
-        if current_student.current_question >= len(current_student.quiz_questions):
-            save_highscore(current_student)
-            quiz_window.destroy()
-            results_window()
-            return
-        # If the skipped question was not the last question, the next question should be displayed.
-        show_question()
-    
-
-    Button( quiz_window, text="SKIP", font=( FONT,10), background="#bfb9c7", width=15, command=skip_question).grid(row=8, column=2, padx=1, pady=30, sticky = "w")
-
-    def quit_question():
-
-        answer = messagebox.askyesno( "Quit" , "Are you sure you want to quit?" )
-
-        if answer:
-            quiz_window.destroy()
-
-    Button(quiz_window, text="QUIT", font=(FONT,10), background="#bfb9c7", width=15, command=quit_question).grid(row=8, column=4,  sticky = "w", pady=30)
-
-
-
-    # Show the first question
-    show_question() 
-    
-
-def results_window():
-    results = tk.Toplevel(main_window)
-    results.title("Results")
-    results.geometry("500x250")
-    results.configure(bg=BACKGROUND)
-
-    Label(results, text =f"Student: {current_student.username.upper()}", bg=BACKGROUND, font=(FONT,10)).pack(pady=5)
-
-    Label(results, text =f"Level: {combo_difficulty.get()}", bg=BACKGROUND, font=(FONT,10)).pack()
-
-    Label(results, text= f"Score: {current_student.score}/{len(current_student.quiz_questions)}", bg=BACKGROUND, font=(FONT,16)).pack(pady=15)
-            
-    percentage = (current_student.score / len(current_student.quiz_questions)) * 100
-
-    if percentage == 100:
-        feedback = "Amazing work! Perfect score!"
-
-    elif percentage >= 80:
-        feedback = "Great work! You're ready for the next level."
-    elif percentage >= 60:
-        feedback = "Good effort! Keep going."
-
-    elif percentage >= 40:
-        feedback = "You're getting there. Try again."
-    elif percentage == 0:
-        feedback = "Oops! Try Again"
-    else:
-        feedback = "Keep practising. You'll get there!" 
-
-    Label(results, text=feedback, font=(FONT, 10), bg=BACKGROUND,wraplength=300).pack(pady=10)
-
-    def next_level():
-        current_student.score = 0
-
+        # Prompts the program to give the current student the selected number of questions from the available questions, and allows the user to start from the first questions.
+        current_student.quiz_questions = available_questions[:number_questions]
         current_student.current_question = 0
 
-        if combo_difficulty.get() == "BASIC":
-            combo_difficulty.set("ADVANCED")
+        # Capitalises the student's username, so that it can be displayed neatly in the quiz window.
+        uppercase_username = current_student.username.upper()
 
-        elif combo_difficulty.get() == "ADVANCED":
-            combo_difficulty.set("EXPERT")
+        # Define how the Student information should be formatted, so that it can be displayed in the quiz window for each session.
+        Label( quiz_window, text =f"       STUDENT: {uppercase_username}    AGE: {current_student.age}    YEAR LEVEL: {current_student.year_level}    DIFFICULTY: {difficulty}", font=(FONT, 8), bg=BACKGROUND ).grid(row=1, column=0, columnspan=4, pady=10)
+
+        # Create and format an empty label, so that the program is able to display the updated question number, using q.question, each time.
+        question_number = Label( quiz_window, text="", font=(FONT, 10), bg=BACKGROUND)
+        question_number.grid(row=1, column=4)
+
+        # Create and format an empty label, so that the program is able to display the exact question for the user.
+        # Question label
+        question_label = Label( quiz_window, text="", font=( FONT, 14), bg=BACKGROUND )
+        question_label.grid(row=2, column=3, sticky = "w", columnspan=4, pady=20)
+
+
+        # Create a variable StringVar to store the user's selected answer
+        answer_var = StringVar()
+
+        # Create radiobuttons to allow the user to select an answer from 4 options. This multichoice method prevents additonal validation checks for the answer entry box, and keeps the code more concise, robust and flexible.
+
+        # Format the radio buttons, so that the layout is aesthetically pleasing and user friendly, and call the answer_var variable that was created so that the four options are displayed in the radio buttons.        
+        radio1 = Radiobutton(quiz_window, text="", variable=answer_var, value = "1", bg=BACKGROUND)
+        radio1.grid(row=3, column=3, sticky="w", padx=40)
+
+        radio2 = Radiobutton(quiz_window, text="", variable=answer_var, value = "2", bg=BACKGROUND)
+        radio2.grid(row=4, column=3, sticky="w", padx=40)
+
+        radio3 = Radiobutton(quiz_window, text="", variable=answer_var, value = "3", bg=BACKGROUND)
+        radio3.grid(row=5, column=3, sticky="w", padx=40)
+
+        radio4 = Radiobutton(quiz_window, text="", variable=answer_var, value = "4", bg=BACKGROUND)
+        radio4.grid(row= 6, column=3, sticky ="w", padx=40)
+
+        # Define the show_question function, so that the program displays the current question for the user.
+        def show_question():
+            # Create a variable, q, to store the current question from the student's set of quiz questions.
+            q = current_student.quiz_questions[current_student.current_question]
+            # Update the question number to show the user's current progress, using the question_number label that was created.    
+            question_number.config( text=f"              Question {current_student.current_question + 1} of {len (current_student.quiz_questions)}" )
+
+            # Display the current questions for the user, using the question_label that was created.
+            question_label.config(text=q.question)
+
+            # Update the four radio buttons to accurately show the user's current answer choices.
+            radio1.config(text=q.choices[0], value=q.choices[0])
+            radio2.config(text=q.choices[1], value=q.choices[1])
+            radio3.config(text=q.choices[2], value=q.choices[2])
+            radio4.config(text=q.choices[3], value=q.choices[3])
+
+            # Reset the selected answer, so that none of the radio button options are selected for the new question.
+            answer_var.set("NONE")
+
+        # Create a feedback message popup that displays after each question is submitted, to inform the user of if their answer was right or wrong.
+        def feedback_popup(message):
+
+            popup = tk.Toplevel(quiz_window)
+            popup.title("Feedback")
+            popup.geometry("250x100")
+            popup.configure(bg=BACKGROUND)
+
+            # Create a label to display the message in the popup window.
+            Label( popup, text=message, font=(FONT, 11), bg=BACKGROUND ).pack(expand=True)
+
+            # Prompt the program to automatically destory the popup window after the defined time period in ms.
+            popup.after(2000, popup.destroy)
+        
+        # Define the action, for when the continue_question function is called.
+        def continue_question():
+            # Allow the user to be moved on to the next question.
+            current_student.next_question()
+            # If the student has completed all questions, the program should save their score, destroy the quiz window, and open the results window, to provide their overall performance and feedback.
+            if current_student.current_question >= len(current_student.quiz_questions):
+                save_highscore(current_student)
+                quiz_window.destroy()
+                results_window()
+                return
+            # If the student has not completed their question set, display the next question.
+            show_question()
+
+        # Define the process that must be carried out when the Next button is pressed.
+        def next_question():
+            # If the user has not answered, the program will display an error window until an option is selected, or the question is skipped.
+            if answer_var.get() == "NONE":
+                error_window("Please select an answer or press Skip.")
+                return
+            # Create a variable q, to store the current question for the student.
+            q = current_student.quiz_questions[current_student.current_question]
+            # Display the message to be displayed if the answer is right or wrong, and prompt the program to automatically destroy the window after the defined amount of time.
+            if answer_var.get() == q.answer:
+                current_student.add_score()
+                feedback_popup("✓ Correct!")
+            else:
+                feedback_popup(f"✗ Incorrect!\nCorrect answer: {q.answer}")
+
+            quiz_window.after(2000, continue_question)
+        # Show the next question, for the user, after displaying if the answer was right or wrong.
+        show_question()
+
+        # Create and format the next button, so that the user is able to move on to the next question, after completing a question.
+        Button(quiz_window, text="NEXT", font=(FONT, 10), width=15, background="#bfb9c7", command=next_question ).grid(row=8, column=3, sticky = "w", pady=30)
+
+        # Define what must happen when the user skips a question.
+        def skip_question():
+            # This moves the student onto the next question for the question set without recording an answer.
+            current_student.next_question()
+            # If the question skipped was the last question from the set the program should save the score, destroy the quiz window, and show the result window.
+            if current_student.current_question >= len(current_student.quiz_questions):
+                save_highscore(current_student)
+                quiz_window.destroy()
+                results_window()
+                return
+            # If the skipped question was not the last question, display the next question.
+            show_question()
+        
+        # Create and position the skip button.
+        Button( quiz_window, text="SKIP", font=( FONT,10), background="#bfb9c7", width=15, command=skip_question).grid(row=8, column=2, padx=1, pady=30, sticky = "w")
+        # Define the function to be performed when the user quits a question.
+        def quit_question():
+            # Instruct the program to display a confirmation message box for the user.
+            answer = messagebox.askyesno( "Quit" , "Are you sure you want to quit?" )
+
+            if answer:
+                quiz_window.destroy()
+        # Display the quit button on the quiz window, to allow the user to quit anytime they wish to.
+        Button(quiz_window, text="QUIT", font=(FONT,10), background="#bfb9c7", width=15, command=quit_question).grid(row=8, column=4,  sticky = "w", pady=30)
+        
+        # Show the first question, from the user's question set.
+        show_question() 
+        
+    # Define the function of, and format the results window, where the user is provided with their progression and performance summary.
+    def results_window():
+        results = tk.Toplevel(main_window)
+        results.title("Results")
+        results.geometry("500x250")
+        results.configure(bg=BACKGROUND)
+
+        # Display the username of the current student in the results window.
+        Label(results, text =f"Student: {current_student.username.upper()}", bg=BACKGROUND, font=(FONT,10)).pack(pady=5)
+        # Display the level of the current student in the results window, so that they are able to track their progression.    
+        Label(results, text =f"Level: {combo_difficulty.get()}", bg=BACKGROUND, font=(FONT,10)).pack()
+        # Display the score of the current student in the results window, by showing score/total questions answered.
+        Label(results, text= f"Score: {current_student.score}/{len(current_student.quiz_questions)}", bg=BACKGROUND, font=(FONT,16)).pack(pady=15)
+        # Calculate the percentage scored by the student, so that it can be used to print the feedback message.        
+        percentage = (current_student.score / len(current_student.quiz_questions)) * 100
+
+        # Specify the message to be displayed for each percentage range, so that the user recieves feedback.
+        if percentage == 100:
+            feedback = "Amazing work! Perfect score!"
+
+        elif percentage >= 80:
+            feedback = "Great work! You're ready for the next level."
+        elif percentage >= 60:
+            feedback = "Good effort! Keep going."
+
+        elif percentage >= 40:
+            feedback = "You're getting there. Try again."
+        elif percentage == 0:
+            feedback = "Oops! Try Again"
+        else:
+            feedback = "Keep practising. You'll get there!" 
+        # Create and position the label for the feedback message.
+        Label(results, text=feedback, font=(FONT, 10), bg=BACKGROUND,wraplength=300).pack(pady=10)
+        # Define the function to be performed when the next level function is called, to allow the user to progress onto higher levels.
+        def next_level():
+            # Reset the user score to 0, before they start a new level.
+            current_student.score = 0
+            # Set the current question to 0, so that the user starts on the first question of the set.
+            current_student.current_question = 0
+            
+            # Set the difficulty level to the next level, based on the current difficulty that was completed, if prompted to go to the next level.
+            if combo_difficulty.get() == "BASIC":
+                combo_difficulty.set("ADVANCED")
+
+            elif combo_difficulty.get() == "ADVANCED":
+                combo_difficulty.set("EXPERT")
+
+            # Prompt the program to destroy the results window.
+            else:
+                results.destroy()
+                return
+            # Destroy the results window, and reopen the quiz window, by calling on the start_quiz function.
+            results.destroy()
+            start_quiz()
+
+        # Format the retry level button, allowing users to reattempt levels for a better score, and set the user's score to 0.
+        Button(results, text="Retry Level", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy(), setattr(current_student, "score", 0), start_quiz())).pack(side="left", padx=20, pady=20)
+
+        # Define the function for the main menu function.
+        def main_menu():
+            # Clear all entry boxes, to allow the user to reinput new information if required.
+            entry_username.delete(0, END)
+            entry_age.delete(0, END)
+            entry_year_level.delete(0, END)
+
+            # Reset difficulty and question slider, to allow changes in these settings.
+            combo_difficulty.current(0)
+            question_var.set(5) 
+
+            # Reset the current student's information so that the program is prepared for the next student.
+            current_student.score = 0
+            current_student.current_question = 0
+
+            # Close the results window, so that the main_menu window is redisplayed.
+            results.destroy()
+        # Create the main menu button, to allow the user to return to the main screen.    
+        Button(results, text="Main Menu", font=(FONT, 10), width=15, bg="#bfb9c7", command=main_menu ).pack(side="left", padx=10, pady=20)
+
+        # Informs the user that if the difficulty level is not equal to expert, which is the highest level available, it should progress to the next level. If the current difficulty is expert, the user should not be able to progress to the next level, and should display the finish button instead.
+        if combo_difficulty.get() != "EXPERT":
+            Button(results, text="Next Level", font=(FONT, 10), width=15, bg="#bfb9c7", command=next_level ).pack(side="right", padx=20, pady=20)
 
         else:
-            results.destroy()
+            Button(results, text="Finish", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy()) ).pack(side="right", padx=20, pady=20)
+        
+    # Set up validation checks to ensure that the user information is suitable and accurate - display the error window, that was defined, for invalid or boundary cases
+    def check_inputs():
+        username= entry_username.get().strip()
+        age = entry_age.get().strip()
+        year_level = entry_year_level.get().strip()
+
+
+        # Username Validation check, to see if the username is not blank.
+        if username == "":
+            error_window("Username cannot be blank.")
+            return
+        # If the username contains non-alphabetic characters the error window should be displayed.
+        if not username.replace(" ", "").isalpha():
+            error_window("Username must contain letters only.")
             return
 
-        results.destroy()
+        # Age Validation - if the age entered contains non-numeric values the error message should display. If the age exceeds the boundary range, the error message should also be displayed.
+        
+        if not age.isdigit():
+            error_window("Age must be numeric.")
+            return
+        age = int(age)
+        if age < 0 or age > MAX_AGE:
+            error_window("Age must be between 0 and 120.")
+            return
+
+        # Year Level Validation - the year should be numeric, and within the boundary values, if not the error window should be displayed.
+        if not year_level.isdigit():
+            error_window("Year level must be numeric.")
+            return
+        year_level = int(year_level)
+        if year_level < MIN_YEAR_LEVEL or year_level > MAX_YEAR_LEVEL:
+            error_window("Year level must be between 1 and 13.")
+            return
+
+        # Combo Box Validation check - the difficulty level should be from the three available options, however using the read-only format prevents this issue.
+        if combo_difficulty.get() not in DIFFICULTIES:
+            error_window("Please select a difficulty option.")
+            return
+    
+
+        # Create the Student Object for the Student Class.
+        global current_student
+        
+        current_student = Student( username, age, year_level )
         start_quiz()
 
+    # Create an IntVar to store the number of questions selected using the question slider, with 5 as the default value.
+    question_var = tk.IntVar(value=5)
 
-    Button(results, text="Retry Level", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy(), setattr(current_student, "score", 0), start_quiz())).pack(side="left", padx=20, pady=20)
+    # Create a label for the displayed welcome message, so that the user is able to view the text.
 
+    Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=(FONT, 10 ), bg=HEADER ).grid(row=1, column=0, columnspan=5, pady=15)
+    # Create labels for the entry boxes, so that the user can identify the required information.
+    Label( main_window, text="  USERNAME:  ", font=(FONT, 10 ), bg=HEADER ).grid(row=2, column=0, padx=10, pady=10)
 
-    def main_menu():
-        # Clear entry boxes
-        entry_username.delete(0, END)
-        entry_age.delete(0, END)
-        entry_year_level.delete(0, END)
+    Label( main_window, text=" AGE: ", font=(FONT, 10), bg=HEADER ).grid(row=2, column=2, padx=10, sticky = "w")
 
-        # Reset difficulty and question slider
-        combo_difficulty.current(0)
-        question_var.set(5) 
+    Label( main_window, text="   YEAR LEVEL:  ", font =(FONT, 10), bg=HEADER ).grid(row=2, column=3, padx=10)
 
-        # Reset the current student's information so that the program is prepared for the next student
-        current_student.score = 0
-        current_student.current_question = 0
+    # Prompt the user to enter the required details: username, age, and year level - in the entry boxes for convenience.
+    # Create and format the entry boxes, so that they align with the colour scheme and style of the other windows.
+    entry_username = Entry(main_window, background="#bfb9c7", width=18)
+    entry_username.grid(row=2, column=1, padx=10)
 
-        # Close the results window
-        results.destroy()
-        
-    Button(results, text="Main Menu", font=(FONT, 10), width=15, bg="#bfb9c7", command=main_menu ).pack(side="left", padx=10, pady=20)
+    entry_age = Entry(main_window, background="#bfb9c7", width=10)
+    entry_age.grid(row=2, column=2, padx=10, sticky = "e")
 
+    entry_year_level = Entry(main_window, background="#bfb9c7", width=16)
+    entry_year_level.grid(row=2, column=4, padx=10)
 
-    if combo_difficulty.get() != "EXPERT":
-        Button(results, text="Next Level", font=(FONT, 10), width=15, bg="#bfb9c7", command=next_level ).pack(side="right", padx=20, pady=20)
+    # Create a combobox and label to store the  user's difficulty option. The combobox should be in read-only format to avoid invalid inputs, with the default value being "Basic".
+    difficulty = DIFFICULTIES
 
-    else:
-        Button(results, text="Finish", font=(FONT, 10), width=15, bg="#bfb9c7", command=lambda: ( results.destroy()) ).pack(side="right", padx=20, pady=20)
-    
+    difficulty_label = Label(main_window, font=(FONT, 10), bg=HEADER, text="  DIFFICULTY:  " )
+    difficulty_label.grid(row=6, column=0, pady=15, columnspan = 2)
 
+    combo_difficulty = ttk.Combobox( main_window, values= difficulty, width=15, state = "readonly")
+    combo_difficulty.grid(row=6, column=3, sticky="w")
+    combo_difficulty.current(0)
 
-# Set up validation checks to ensure that the user information is suitable and accurate - display the error window for invalid or boundary cases
-def check_inputs():
-    username= entry_username.get().strip()
-    age = entry_age.get().strip()
-    year_level = entry_year_level.get().strip()
+    # Format the label for the number of questions slider, so that it is easily identifiable.
+    question_label = Label( main_window, text ="  NO. OF QUESTIONS:  ", font=( FONT, 10), bg=HEADER)
+    question_label.grid(row=4, column=0, columnspan=2, pady=15)
 
+    # Number of Questions Slider - allow the user to specify between 5 to 15 questions, using the slider, with 5 being the default value, to avoid invalid inputs that could be present when using an entry box.
+    question_slider = tk.Scale(main_window, from_=5, to=15, resolution=5, orient="horizontal", length=115, showvalue=True, variable=question_var, bg=BACKGROUND,highlightthickness=0)
+    question_slider.grid(row=4, column=3, columnspan=2, sticky="w")
 
-    # Username Validation check
-    if username == "":
-        error_window("Username cannot be blank.")
-        return
+    # Create and format the start, quit and view highscore buttons, along the bottom, so that the user is able to easily start the game, view highscores, or quit the subroutine.
+    # Specify the function to be carried out with the command value, which is quit_app.
+    quit_button = Button( main_window , font=(FONT, 10), text="QUIT", command=quit_app, width=15, background="#bfb9c7")
+    quit_button.grid(row=8, column=1, padx =5, pady=30 )
+    # Specify the function to be carried out by the program, with the command value, which is check_inputs.
+    start_button = Button( main_window, font=(FONT, 10), text="START", command=check_inputs, width=15, background="#bfb9c7")
+    start_button.grid(row=8, column=2, padx = 5, pady=30)
+    # Specify the function to be carried out with the command value, which is view_highscores, indicating that the highscore window should display.
+    highscore_button =Button( main_window, font=(FONT, 10), command=view_highscores, text="  VIEW HIGHSCORES  ",width=19, background="#bfb9c7" )
+    highscore_button.grid(row=8, column=3 , padx=5, pady=30 )
 
-    if not username.replace(" ", "").isalpha():
-        error_window("Username must contain letters only.")
-        return
-
-    # Age Validation
-    
-    if not age.isdigit():
-        error_window("Age must be numeric.")
-        return
-    age = int(age)
-    if age < 0 or age > MAX_AGE:
-        error_window("Age must be between 0 and 120.")
-        return
-
-    # Year Level Validation
-    if not year_level.isdigit():
-        error_window("Year level must be numeric.")
-        return
-    year_level = int(year_level)
-    if year_level < MIN_YEAR_LEVEL or year_level > MAX_YEAR_LEVEL:
-        error_window("Year level must be between 1 and 13.")
-        return
-
-    # Combo Box Validation check
-    if combo_difficulty.get() not in DIFFICULTIES:
-        error_window("Please select a difficulty option.")
-        return
- 
-
-    # Create the Student Object for the Student Class
-    global current_student
-    
-    current_student = Student( username, age, year_level )
-    start_quiz()
-
-# Radio buttons to prompt the user to specifiy the required number of questions
-question_var = tk.IntVar(value=5)
-
-
-# Create labels for the entry boxes, and for the displayed welcome message
-
-Label( main_window, text="  WELCOME TO THE MATHS QUIZ APP!  ", font=(FONT, 10 ), bg=HEADER ).grid(row=1, column=0, columnspan=5, pady=15)
-
-Label( main_window, text="  USERNAME:  ", font=(FONT, 10 ), bg=HEADER ).grid(row=2, column=0, padx=10, pady=10)
-
-Label( main_window, text=" AGE: ", font=(FONT, 10), bg=HEADER ).grid(row=2, column=2, padx=10, sticky = "w")
-
-Label( main_window, text="   YEAR LEVEL:  ", font =(FONT, 10), bg=HEADER ).grid(row=2, column=3, padx=10)
-
-# Prompt the user to enter the required details: username, age, and year level - in the entry boxes for convenience
-# Create and format the entry boxes, so that they align with the colour scheme
-entry_username = Entry(main_window, background="#bfb9c7", width=18)
-entry_username.grid(row=2, column=1, padx=10)
-
-entry_age = Entry(main_window, background="#bfb9c7", width=10)
-entry_age.grid(row=2, column=2, padx=10, sticky = "e")
-
-entry_year_level = Entry(main_window, background="#bfb9c7", width=16)
-entry_year_level.grid(row=2, column=4, padx=10)
-
-# Create a combobox that stores the  user's difficulty option
-difficulty = DIFFICULTIES
-
-difficulty_label = Label(main_window, font=(FONT, 10), bg=HEADER, text="  DIFFICULTY:  " )
-difficulty_label.grid(row=6, column=0, pady=15, columnspan = 2)
-
-combo_difficulty = ttk.Combobox( main_window, values= difficulty, width=15, state = "readonly")
-combo_difficulty.grid(row=6, column=3, sticky="w")
-combo_difficulty.current(0)
-
-# Label for number of questions entry
-# Number of Questions Label
-question_label = Label( main_window, text ="  NO. OF QUESTIONS:  ", font=( FONT, 10), bg=HEADER)
-question_label.grid(row=4, column=0, columnspan=2, pady=15)
-
-# Number of Questions Slider - allow the user to specify between 5 to 15 questions
-question_slider = tk.Scale(main_window, from_=5, to=15, resolution=5, orient="horizontal", length=115, showvalue=True, variable=question_var, bg=BACKGROUND,highlightthickness=0)
-question_slider.grid(row=4, column=3, columnspan=2, sticky="w")
-
-# Create the start, quit and view highscore buttons
-quit_button = Button( main_window , font=(FONT, 10), text="QUIT", command=quit_app, width=15, background="#bfb9c7")
-quit_button.grid(row=8, column=1, padx =5, pady=30 )
-
-start_button = Button( main_window, font=(FONT, 10), text="START", command=check_inputs, width=15, background="#bfb9c7")
-start_button.grid(row=8, column=2, padx = 5, pady=30)
-
-highscore_button =Button( main_window, font=(FONT, 10), command=view_highscores, text="  VIEW HIGHSCORES  ",width=19, background="#bfb9c7" )
-highscore_button.grid(row=8, column=3 , padx=5, pady=30 )
-
-# Create the main window, by defining a main() function, for robustness and flexibility, to accomodate adjustments conveniently.
-def main():
+    # Specify the main window geometry, so that the main window is visually appealing and user friendly, while fitting the format of the other windows.
     main_window.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
     main_window.configure(background=BACKGROUND)
     main_window.title("Maths Quiz App")
     main_window.mainloop()
 
-if __name__=="__main__":
-    main()
+# Start/call the main function.
+main()
